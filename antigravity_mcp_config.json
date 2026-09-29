@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "ids-mcp": {
+      "command": "python",
+      "args": ["D:\\Projects\\.mcp\\ids-mcp\\server_ai_enhanced.py"],
+      "transport": "stdio",
+      "cwd": "D:\\Projects\\.mcp\\ids-mcp"
+    },
+    "impressioncore-eds": {
+      "command": "python",
+      "args": ["D:\\Projects\\.mcp\\impressioncore-eds\\server_enhanced.py"],
+      "transport": "stdio",
+      "cwd": "D:\\Projects\\.mcp\\impressioncore-eds"
+    },
+    "impressioncore-ipa": {
+      "command": "python",
+      "args": ["D:\\Projects\\.mcp\\impressioncore-ipa\\server_ultimate.py"],
+      "transport": "stdio",
+      "cwd": "D:\\Projects\\.mcp\\impressioncore-ipa"
+    },
+    "impressioncore-goliath": {
+      "command": "python",
+      "args": ["D:\\Projects\\.mcp\\impressioncore-goliath\\server.py"],
+      "transport": "stdio",
+      "cwd": "D:\\Projects\\.mcp\\impressioncore-goliath"
+    },
+    "impressioncore-vrgc": {
+      "command": "python",
+      "args": ["D:\\Projects\\.mcp\\impressioncore-vrgc\\server_enhanced.py"],
+      "transport": "stdio",
+      "cwd": "D:\\Projects\\.mcp\\impressioncore-vrgc"
+    },
+    "impressioncore-dpa": {
+      "command": "python",
+      "args": ["D:\\Projects\\.mcp\\impressioncore-dpa\\server_enhanced.py"],
+      "transport": "stdio",
+      "cwd": "D:\\Projects\\.mcp\\impressioncore-dpa"
+    }
+  }
+}

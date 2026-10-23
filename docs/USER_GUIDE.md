@@ -96,6 +96,8 @@ Pre-configured, UTF-8 validated configuration files are located in the repositor
   - `ai_semantic_search`: Semantic search across repository symbols and documentation.
   - `knowledge_graph_query`: Explore relationships between functions, classes, and architectural components.
   - `ids_trace_lineage`: Trace upstream and downstream dependencies for a given symbol.
+- **Example Prompt:**
+  > *"Use `knowledge_graph_query` to map all functions and classes that depend on `shared.stdio_guard`, and trace their upstream call lineage."*
 
 ---
 
@@ -106,6 +108,8 @@ Pre-configured, UTF-8 validated configuration files are located in the repositor
   - `scrape_mit_ocw_enhanced`: Extract course notes and syllabus metadata.
   - `verify_enhanced_license_compliance`: Check dataset content against open licenses (Creative Commons, MIT, Public Domain).
   - `assess_content_quality_enhanced`: Algorithmic educational density scoring.
+- **Example Prompt:**
+  > *"Scrape MIT OpenCourseWare lecture notes for introductory Linear Algebra using `scrape_mit_ocw_enhanced`, and verify license compliance for local training."*
 
 ---
 
@@ -116,6 +120,8 @@ Pre-configured, UTF-8 validated configuration files are located in the repositor
   - `vrgc_assess_system`: Comprehensive assessment of CPU, GPU, memory, and disk health.
   - `vrgc_hardware_profiling`: Profile execution footprints and memory bottlenecks.
   - `vrgc_self_heal_code`: Analyze error stack traces and synthesize candidate fixes.
+- **Example Prompt:**
+  > *"Run `vrgc_assess_system` to inspect current GPU VRAM utilization and temperature, then execute `vrgc_hardware_profiling` on our active training loop."*
 
 ---
 
@@ -126,6 +132,8 @@ Pre-configured, UTF-8 validated configuration files are located in the repositor
   - `get_intent`: Classify user task intent from freeform text.
   - `get_entities`: Extract named entities, dates, and action items.
   - `process_accessibility_request`: Assess and adapt output formatting for auditory or visual accessibility profiles.
+- **Example Prompt:**
+  > *"Extract all action items, dates, and named entities from this meeting transcript using `get_entities`, then classify the primary project intent."*
 
 ---
 
@@ -135,6 +143,8 @@ Pre-configured, UTF-8 validated configuration files are located in the repositor
 - **Key Tools:**
   - `goliath_get_swarm_state`: Inspect active findings, hardware VRAM usage, and swarm memory context.
   - `goliath_synergize_memory`: Store insights and findings across multi-agent sessions.
+- **Example Prompt:**
+  > *"Query `goliath_get_swarm_state` to review shared memory context and recent findings across our agent fleet, then record our new benchmark conclusions."*
 
 ---
 

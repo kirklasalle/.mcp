@@ -1,0 +1,160 @@
+# User Guide: Model Context Protocol Enterprise Tooling Fleet
+
+> **Sovereign Operator:** Kirk LaSalle (`kirk@.nexus`)  
+> **Target Audience:** Developers, Researchers, and AI Agentic Operators  
+> **Fleet Repository:** [`D:\Projects\.mcp`](file:///D:/Projects/.mcp)  
+> **Status:** Version 2.0.0 (Production Verified)  
+
+---
+
+![User Workflow & Client Integration](../assets/images/user_workflow.jpg)
+
+---
+
+## 1. Introduction
+
+The `.mcp` monorepo provides a suite of **8 specialized Model Context Protocol (MCP) micro-servers** that connect directly into your modern AI coding and research environments (Claude Desktop, Google Antigravity IDE, Cursor, Windsurf, and CLI agents).
+
+Whether you are performing academic deep research with automated arXiv citations, querying the Library of Congress archives, scraping license-compliant educational datasets, analyzing local codebase graphs, or monitoring hardware diagnostics, this fleet delivers structured, hallucination-resistant capabilities directly to your LLM's chat context.
+
+---
+
+## 2. Prerequisites & Environment Setup
+
+### 2.1 System Requirements
+- **Operating System:** Windows 10/11, macOS, or Linux.
+- **Python Runtime:** Python 3.11, 3.12, or 3.14.
+- **Dependencies:** Install the core fleet requirements:
+  ```bash
+  pip install mcp anyio httpx beautifulsoup4 requests aiohttp
+  ```
+
+---
+
+## 3. 1-Click Client Configurations
+
+Pre-configured, UTF-8 validated configuration files are located in the repository root for instant integration:
+
+| Client Environment | Source Configuration File | Target Installation Location |
+| :--- | :--- | :--- |
+| **Google Antigravity IDE** | [`antigravity_mcp_config.json`](file:///D:/Projects/.mcp/antigravity_mcp_config.json) | `%USERPROFILE%\.gemini\antigravity-ide\mcp\` or workspace `.gemini/` |
+| **Anthropic Claude Desktop** | [`claude_desktop_config.json`](file:///D:/Projects/.mcp/claude_desktop_config.json) | `%APPDATA%\Claude\claude_desktop_config.json` |
+| **Cursor & Windsurf** | [`mcp-settings.json`](file:///D:/Projects/.mcp/mcp-settings.json) | `<WorkspaceRoot>/.cursor/mcp.json` or `.windsurf/mcp.json` |
+| **Nexus Post Office** | [`nexus-mcp-settings.json`](file:///D:/Projects/.mcp/nexus-mcp-settings.json) | Nexus root configuration |
+
+### Example: Setting up Claude Desktop
+
+1. Open your Claude Desktop configuration file:
+   `%APPDATA%\Claude\claude_desktop_config.json`
+2. Copy the contents of [`claude_desktop_config.json`](file:///D:/Projects/.mcp/claude_desktop_config.json) into it.
+3. Restart Claude Desktop. The hammer icon (`🛠️`) in the prompt input will now display the registered MCP tools.
+
+---
+
+## 4. Server-by-Server Capabilities & Everyday Workflows
+
+### 🔍 1. Web Search (`web-search`)
+- **Primary Entrypoint:** `web-search/server.py`
+- **What it does:** High-throughput, multi-engine web search with automatic Google and DuckDuckGo fallback cascades. Returns clean markdown webpage content, stripped of ads and navigation boilerplate.
+- **Key Tools:**
+  - `web_search`: Execute web queries with snippet extraction.
+  - `fetch_webpage`: Fetch a URL and convert it into clean, token-efficient markdown.
+  - `get_search_suggestions`: Query refinement suggestions and keyword expansion.
+- **Example Prompt:**
+  > *"Use `web_search` to find the latest MCP protocol specification updates, then fetch the top documentation page."*
+
+---
+
+### 🏛️ 2. Library of Congress (`loc`)
+- **Primary Entrypoint:** `loc/server.py`
+- **What it does:** Direct interface to United States government cultural and legal archives.
+- **Key Tools:**
+  - `loc_search_catalog`: Search books, audio recordings, photographs, and manuscripts.
+  - `loc_search_newspapers`: Search historical American newspapers in the Chronicling America collection.
+  - `loc_search_legislation`: Search historical congressional bills and statutes.
+- **Example Prompt:**
+  > *"Search the Library of Congress catalog for historical documents regarding the 1927 Radio Act."*
+
+---
+
+### 🔬 3. Academic Research & Search Operator Engine (`ipa`)
+- **Primary Entrypoint:** `ipa/server_ultimate.py`
+- **What it does:** Deep academic research assistant with built-in arXiv query execution, paper abstract retrieval, and academic citation generation.
+- **Key Tools:**
+  - `ipa_academic_research_search`: Query arXiv and academic databases for technical preprints.
+  - `ipa_research_capabilities`: Introspect active research methodologies and search backends.
+  - `ipa_advanced_google_search`: Query with 50+ specialized search engine operators (`filetype:`, `site:`, `inurl:`).
+- **Example Prompt:**
+  > *"Search arXiv for recent preprints on Graph Neural Networks for code documentation and generate academic citations."*
+
+---
+
+### 🧠 4. Code Intelligence & GraphRAG (`ids`)
+- **Primary Entrypoint:** `ids/server_ai_enhanced.py`
+- **What it does:** Intelligent Documentation System. Parses repository codebases, builds an AST-based entity relationship graph, and traces code lineage across files.
+- **Key Tools:**
+  - `ai_semantic_search`: Semantic search across repository symbols and documentation.
+  - `knowledge_graph_query`: Explore relationships between functions, classes, and architectural components.
+  - `ids_trace_lineage`: Trace upstream and downstream dependencies for a given symbol.
+
+---
+
+### 📚 5. Educational Data Scraper (`eds`)
+- **Primary Entrypoint:** `eds/server_enhanced.py`
+- **What it does:** Ethically extracts license-compliant educational content from open platforms (MIT OpenCourseWare, arXiv, Wikipedia CC-BY-SA, Khan Academy).
+- **Key Tools:**
+  - `scrape_mit_ocw_enhanced`: Extract course notes and syllabus metadata.
+  - `verify_enhanced_license_compliance`: Check dataset content against open licenses (Creative Commons, MIT, Public Domain).
+  - `assess_content_quality_enhanced`: Algorithmic educational density scoring.
+
+---
+
+### 🤖 6. Virtually Robotic GitHub Copilot (`vrgc`)
+- **Primary Entrypoint:** `vrgc/server_enhanced.py`
+- **What it does:** Software Application Programming Robot (SAPR). Conducts local system health diagnostics, VRAM and GPU monitoring, and self-healing candidate code validation.
+- **Key Tools:**
+  - `vrgc_assess_system`: Comprehensive assessment of CPU, GPU, memory, and disk health.
+  - `vrgc_hardware_profiling`: Profile execution footprints and memory bottlenecks.
+  - `vrgc_self_heal_code`: Analyze error stack traces and synthesize candidate fixes.
+
+---
+
+### 🎯 7. Digital Project Assistant (`dpa`)
+- **Primary Entrypoint:** `dpa/server.py`
+- **What it does:** Natural language understanding engine, accessibility compliance engine (WCAG AA), and task scheduling assistant.
+- **Key Tools:**
+  - `get_intent`: Classify user task intent from freeform text.
+  - `get_entities`: Extract named entities, dates, and action items.
+  - `process_accessibility_request`: Assess and adapt output formatting for auditory or visual accessibility profiles.
+
+---
+
+### ⚡ 8. Master Orchestrator (`goliath`)
+- **Primary Entrypoint:** `goliath/server.py`
+- **What it does:** Aggregates all child servers into a single master MCP endpoint (50 tools). Manages cross-tool blackboard state and maintains persistent swarm memory across conversations.
+- **Key Tools:**
+  - `goliath_get_swarm_state`: Inspect active findings, hardware VRAM usage, and swarm memory context.
+  - `goliath_synergize_memory`: Store insights and findings across multi-agent sessions.
+
+---
+
+## 5. Verification & Troubleshooting
+
+### Running the Live Protocol Probe
+To verify that all servers on your system pass MCP protocol handshakes and tool execution:
+```bash
+python -u "c:\Users\kirkl\.gemini\antigravity-ide\brain\f3c745f3-a2cb-4916-8ff8-7442f3962343\scratch\probe_v2.py"
+```
+**Expected Output:**
+```
+GATE: 8/8 OK
+```
+
+### Common Issues & Solutions
+
+1. **Client Disconnects / Malformed JSON-RPC:**
+   - **Cause:** Stray `print()` statements in server scripts corrupting the stdout channel.
+   - **Fix:** Ensure the server uses `from shared.stdio_guard import protect_stdout; protect_stdout()`. All logs will be safely redirected to stderr.
+2. **Missing Module `shared`:**
+   - **Cause:** Starting an individual server from its child directory without adding the fleet root to `PYTHONPATH`.
+   - **Fix:** Set environment variable `PYTHONPATH=D:\Projects\.mcp` or rely on the 1-click configuration files which automate working directory resolution.

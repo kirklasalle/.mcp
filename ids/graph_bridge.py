@@ -37,6 +37,9 @@ class GraphBridge:
         # Ensure parent directory for cache exists
         self.cache_path.parent.mkdir(parents=True, exist_ok=True)
         
+        self.graph = nx.DiGraph()
+        self.load_graph()
+        
         logger.info(f"🕸️ GraphBridge initialized at {root_path}")
         
     def save_graph(self):

@@ -185,6 +185,166 @@ Print a complete, formatted "MCP FLEET CALIBRATION CERTIFICATE & DIAGNOSTIC SHEE
 - Final Calibration Seal & Operational Verdict: [FLEET STATUS: 100% CALIBRATED & OPERATIONAL]
 ```
 
+---
+
+### 🧪 The 8 Server Diagnostic Test Prompts & Live Responses
+
+Below is the verified test specification for each micro-server, including the exact prompt dispatched and the live response payload verified during calibration:
+
+#### 1. `goliath` (Master Gateway & Swarm Memory Hub)
+- **Prompt:** `"Query Goliath for current swarm memory state and GPU hardware telemetry with goliath_get_swarm_state."`
+- **Dispatched Tool:** `goliath_get_swarm_state()`
+- **Verified Response:**
+```json
+{
+  "memory": {
+    "active_context": [],
+    "finding_count": 0,
+    "dna_count": 0,
+    "last_updated": "2026-10-23T16:07:52.460991"
+  },
+  "hardware": {
+    "vram_usage_gb": 0.510,
+    "target_limit_gb": 4.0,
+    "status": "Optimal",
+    "timestamp": "2026-10-23T16:07:52.536539"
+  }
+}
+```
+
+#### 2. `vrgc` (Virtually Robotic GitHub Copilot - SAPR Engine)
+- **Prompt:** `"Run system and hardware assessment with vrgc_assess_system to inspect host health and resource allocation."`
+- **Dispatched Tool:** `vrgc_assess_system()`
+- **Verified Response:**
+```json
+{
+  "vrgc_assessment": {
+    "version": "1.0.0",
+    "timestamp": "2026-10-23T16:07:59.029841",
+    "standalone_mode": false
+  },
+  "hardware": {
+    "assessment_type": "hardware_capabilities",
+    "gpu_available": false,
+    "status": "Healthy"
+  }
+}
+```
+
+#### 3. `dpa` (Digital Project Assistant - NLU & Accessibility)
+- **Prompt:** `"Analyze user task intent for fleet diagnostics with get_intent(text='Run diagnostic calibration on agent fleet')."`
+- **Dispatched Tool:** `get_intent(text="Run diagnostic calibration on agent fleet")`
+- **Verified Response:**
+```json
+{
+  "text": "Run diagnostic calibration on agent fleet",
+  "intent": "unknown",
+  "confidence": 0.85,
+  "entities": []
+}
+```
+
+#### 4. `web-search` (High-Throughput Search Broker)
+- **Prompt:** `"Fetch search engine suggestions and query operators for Model Context Protocol with get_search_suggestions(query='Model Context Protocol')."`
+- **Dispatched Tool:** `get_search_suggestions(query="Model Context Protocol")`
+- **Verified Response:**
+```json
+{
+  "original_query": "Model Context Protocol",
+  "suggestions": [
+    "\"Model Context Protocol\"",
+    "Model Context Protocol tutorial",
+    "Model Context Protocol guide",
+    "Model Context Protocol examples"
+  ],
+  "operators": [],
+  "tips": []
+}
+```
+
+#### 5. `loc` (Library of Congress Digital Catalog & Archives)
+- **Prompt:** `"Search the Library of Congress digital catalog for computer science holdings with loc_search_catalog(query='computer science', limit=1)."`
+- **Dispatched Tool:** `loc_search_catalog(query="computer science", limit=1)`
+- **Verified Response:**
+```json
+{
+  "query": "computer science",
+  "collection": "all",
+  "total_available": 29307,
+  "returned_count": 1,
+  "results": [
+    {
+      "title": "Collections Policy Statement: Computer Science, Telecommunication, and Artificial Intelligence",
+      "date": "Unknown date",
+      "url": "https://www.loc.gov/item/2023689408/"
+    }
+  ]
+}
+```
+
+#### 6. `ipa` (Intelligent Processing Assistant - Academic Research)
+- **Prompt:** `"Inspect active academic research methodologies and backend search engines with ipa_research_capabilities."`
+- **Dispatched Tool:** `ipa_research_capabilities()`
+- **Verified Response:**
+```json
+{
+  "server": "ipa",
+  "version": "3.0",
+  "research_methodologies": [
+    "deep_analysis",
+    "real_time",
+    "hybrid",
+    "conversational",
+    "systematic",
+    "investigative",
+    "competitive",
+    "synthesis_first"
+  ],
+  "search_backends": [
+    "DuckDuckGo (HTML)",
+    "arXiv API",
+    "news/RSS sources"
+  ],
+  "governance": "See AGENTIC_SACRED_COVENANT.md at the fleet root."
+}
+```
+
+#### 7. `eds` (Educational Data Scraper & Multimodal Curator)
+- **Prompt:** `"Verify license terms and robots.txt compliance for MIT OpenCourseWare with verify_enhanced_license_compliance(source='MIT OpenCourseWare', url='https://ocw.mit.edu')."`
+- **Dispatched Tool:** `verify_enhanced_license_compliance(source="MIT OpenCourseWare", url="https://ocw.mit.edu")`
+- **Verified Response:**
+```json
+{
+  "source": "MIT OpenCourseWare",
+  "url": "https://ocw.mit.edu",
+  "robots_txt_compliant": true,
+  "license_detected": {
+    "licenses_detected": [
+      "creative commons",
+      "mit license"
+    ],
+    "license_count": 2,
+    "likely_compliant": true
+  }
+}
+```
+
+#### 8. `ids` (Intelligent Documentation System - GraphRAG & AST)
+- **Prompt:** `"Query the repository AST knowledge graph for concept relationships with knowledge_graph_query(query_type='find_related', concept='system')."`
+- **Dispatched Tool:** `knowledge_graph_query(query_type="find_related", concept="system")`
+- **Verified Response:**
+```json
+{
+  "query_type": "find_related",
+  "concept": "system",
+  "status": "query_completed",
+  "graph_status": "active",
+  "message": "Entity 'system' queried against AST dependency graph."
+}
+```
+
+---
+
 ### 🖨️ Sample Expected Output (Diagnostic Test Page)
 
 When the sequence completes, your assistant will output a structured calibration sheet:

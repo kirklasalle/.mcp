@@ -122,7 +122,20 @@ Print a complete, formatted "MCP FLEET CALIBRATION CERTIFICATE & DIAGNOSTIC SHEE
 - Final Calibration Seal & Operational Verdict: [FLEET STATUS: 100% CALIBRATED & OPERATIONAL]
 ```
 
-*See [**`docs/USER_GUIDE.md`**](docs/USER_GUIDE.md#5-ultimate-fleet-calibration--self-test-demo-the-printer-self-test) for full details and the sample expected diagnostic test page output.*
+### 🧪 The 8 Server Diagnostic Test Prompts & Live Responses
+
+| Server | Calibration Test Prompt | Dispatched Tool | Verified Response Payload |
+| :--- | :--- | :--- | :--- |
+| **`goliath`** | *"Query Goliath for current swarm memory state and GPU hardware telemetry"* | `goliath_get_swarm_state()` | `{"memory": {"finding_count": 0}, "hardware": {"vram_usage_gb": 0.510, "status": "Optimal"}}` |
+| **`vrgc`** | *"Run system and hardware assessment with vrgc_assess_system"* | `vrgc_assess_system()` | `{"vrgc_assessment": {"version": "1.0.0"}, "hardware": {"status": "Healthy"}}` |
+| **`dpa`** | *"Analyze user task intent for fleet diagnostics with get_intent"* | `get_intent(text="Run diagnostic calibration on agent fleet")` | `{"text": "Run diagnostic...", "intent": "unknown", "confidence": 0.85}` |
+| **`web-search`** | *"Fetch search engine suggestions and query operators for Model Context Protocol"* | `get_search_suggestions(query="Model Context Protocol")` | `{"suggestions": ["\"Model Context Protocol\"", "Model Context Protocol tutorial", ...]}` |
+| **`loc`** | *"Search the Library of Congress digital catalog for computer science holdings"* | `loc_search_catalog(query="computer science", limit=1)` | `{"total_available": 29307, "results": [{"title": "Collections Policy Statement: Computer Science..."}]}` |
+| **`ipa`** | *"Inspect active academic research methodologies and backend search engines"* | `ipa_research_capabilities()` | `{"server": "ipa", "research_methodologies": ["deep_analysis", "real_time", ...], "search_backends": ["arXiv", "DuckDuckGo"]}` |
+| **`eds`** | *"Verify license terms and robots.txt compliance for MIT OpenCourseWare"* | `verify_enhanced_license_compliance(source="MIT OpenCourseWare", url="https://ocw.mit.edu")` | `{"source": "MIT OpenCourseWare", "robots_txt_compliant": true, "licenses_detected": ["creative commons", "mit"]}` |
+| **`ids`** | *"Query the repository AST knowledge graph for concept relationships"* | `knowledge_graph_query(query_type="find_related", concept="system")` | `{"query_type": "find_related", "concept": "system", "graph_status": "active"}` |
+
+*See [**`docs/USER_GUIDE.md`**](docs/USER_GUIDE.md#5-ultimate-fleet-calibration--self-test-demo-the-printer-self-test) for full uncurated JSON payloads and the sample expected diagnostic test page output.*
 
 ---
 

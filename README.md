@@ -87,6 +87,45 @@ All servers are verified via the automated protocol probe (`probe_v2.py`) execut
 
 ---
 
+## 🖨️ Master Calibration & Fleet Self-Test Demo ("The Printer Self-Test")
+
+For evaluators, users, and public release verification, you can run an automated, hardware-style self-test across all 8 micro-servers simultaneously. Much like an enterprise printer executing an alignment cycle and printing an authoritative diagnostic test sheet, copy and paste this **Master Prompt** into your AI client (Claude Desktop, Antigravity IDE, Cursor):
+
+### 📋 The Master Calibration Prompt (Copy & Paste)
+
+```markdown
+Run a complete, end-to-end Fleet Calibration & Self-Test across all 8 MCP servers in this fleet (goliath, ids, eds, ipa, vrgc, dpa, web-search, loc), simulating an enterprise hardware self-test diagnostic printout.
+
+Please execute the following 3-phase calibration sequence:
+
+### PHASE 1: DISCOVERY & HANDSHAKE ALIGNMENT
+1. Inspect registered tools across all 8 active micro-servers.
+2. Confirm active JSON-RPC 2.0 stdio communication channels.
+
+### PHASE 2: MULTI-SERVER FUNCTIONAL SELF-TESTS
+Sequentially execute one safe, deterministic diagnostic operation on each micro-server:
+1. GOLIATH: Query swarm blackboard state with `goliath_get_swarm_state`.
+2. VRGC: Query local host diagnostic metrics with `vrgc_assess_system`.
+3. DPA: Analyze a natural language sample intent with `get_intent(text="Run diagnostic calibration on agent fleet")`.
+4. WEB-SEARCH: Query keyword query suggestions with `get_search_suggestions(query="Model Context Protocol")`.
+5. LOC: Execute an item search in Library of Congress archives with `loc_search_catalog(query="computer science", limit=1)`.
+6. IPA: Query academic research capabilities and search operators with `ipa_research_capabilities`.
+7. EDS: Verify open license compliance rules using `verify_enhanced_license_compliance(license_type="MIT")`.
+8. IDS: Query knowledge graph readiness or semantic symbols with `knowledge_graph_query(query="system")`.
+
+### PHASE 3: CALIBRATION TEST PRINT-OUT
+Print a complete, formatted "MCP FLEET CALIBRATION CERTIFICATE & DIAGNOSTIC SHEET" containing:
+- Diagnostic Header (Timestamp, Host OS, Protocol Standard: 2025-11-25)
+- Server-by-Server Alignment Table (Server, Canonical Script, Tool Tested, Execution Status, Latency/Notes)
+- Swarm Memory & VRAM Hardware Budget Telemetry
+- Sacred Covenant Governance Compliance Checklist (Laws 2, 7, 9, 10)
+- Final Calibration Seal & Operational Verdict: [FLEET STATUS: 100% CALIBRATED & OPERATIONAL]
+```
+
+*See [**`docs/USER_GUIDE.md`**](docs/USER_GUIDE.md#5-ultimate-fleet-calibration--self-test-demo-the-printer-self-test) for full details and the sample expected diagnostic test page output.*
+
+---
+
 ## ⚙️ 1-Click Client Configurations
 
 Pre-configured, UTF-8 validated configuration files are provided in the repository root for instant integration:

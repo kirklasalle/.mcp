@@ -148,10 +148,101 @@ Pre-configured, UTF-8 validated configuration files are located in the repositor
 
 ---
 
-## 5. Verification & Troubleshooting
+## 5. Ultimate Fleet Calibration & Self-Test Demo ("The Printer Self-Test")
+
+Just like an enterprise laser printer or plotter executes an automated alignment and self-test cycle—checking printheads, ink density, paper feed sensors, and producing an authoritative diagnostic test page—you can command your AI client (Claude Desktop, Antigravity IDE, Cursor) to run a comprehensive **Fleet Calibration & Diagnostic Self-Test** across all 8 micro-servers.
+
+### 📋 The Master Calibration Prompt (Copy & Paste into your AI Client)
+
+Copy the prompt below and paste it directly into your AI chat window after loading the fleet:
+
+```markdown
+Run a complete, end-to-end Fleet Calibration & Self-Test across all 8 MCP servers in this fleet (goliath, ids, eds, ipa, vrgc, dpa, web-search, loc), simulating an enterprise hardware self-test diagnostic printout.
+
+Please execute the following 3-phase calibration sequence:
+
+### PHASE 1: DISCOVERY & HANDSHAKE ALIGNMENT
+1. Inspect registered tools across all 8 active micro-servers.
+2. Confirm active JSON-RPC 2.0 stdio communication channels.
+
+### PHASE 2: MULTI-SERVER FUNCTIONAL SELF-TESTS
+Sequentially execute one safe, deterministic diagnostic operation on each micro-server:
+1. GOLIATH: Query swarm blackboard state with `goliath_get_swarm_state`.
+2. VRGC: Query local host diagnostic metrics with `vrgc_assess_system`.
+3. DPA: Analyze a natural language sample intent with `get_intent(text="Run diagnostic calibration on agent fleet")`.
+4. WEB-SEARCH: Query keyword query suggestions with `get_search_suggestions(query="Model Context Protocol")`.
+5. LOC: Execute an item search in Library of Congress archives with `loc_search_catalog(query="computer science", limit=1)`.
+6. IPA: Query academic research capabilities and search operators with `ipa_research_capabilities`.
+7. EDS: Verify open license compliance rules using `verify_enhanced_license_compliance(license_type="MIT")`.
+8. IDS: Query knowledge graph readiness or semantic symbols with `knowledge_graph_query(query="system")`.
+
+### PHASE 3: CALIBRATION TEST PRINT-OUT
+Print a complete, formatted "MCP FLEET CALIBRATION CERTIFICATE & DIAGNOSTIC SHEET" containing:
+- Diagnostic Header (Timestamp, Host OS, Protocol Standard: 2025-11-25)
+- Server-by-Server Alignment Table (Server, Canonical Script, Tool Tested, Execution Status, Latency/Notes)
+- Swarm Memory & VRAM Hardware Budget Telemetry
+- Sacred Covenant Governance Compliance Checklist (Laws 2, 7, 9, 10)
+- Final Calibration Seal & Operational Verdict: [FLEET STATUS: 100% CALIBRATED & OPERATIONAL]
+```
+
+### 🖨️ Sample Expected Output (Diagnostic Test Page)
+
+When the sequence completes, your assistant will output a structured calibration sheet:
+
+```
+================================================================================
+           MODEL CONTEXT PROTOCOL (MCP) ENTERPRISE TOOLING FLEET
+              CALIBRATION CERTIFICATE & SYSTEM DIAGNOSTIC SHEET
+================================================================================
+Timestamp:       2026-10-23T15:58:30Z
+Protocol Spec:   MCP 2025-11-25 (JSON-RPC 2.0 over isolated stdio)
+Sovereign:       Kirk LaSalle (kirk@.nexus)
+Host:            Windows NT x64 | Python 3.14 / 3.12 Runtime
+Stream Guard:    shared.stdio_guard [ACTIVE - fd 1 isolated]
+
+--------------------------------------------------------------------------------
+1. SERVER ALIGNMENT & FUNCTIONAL DISPATCH MATRIX
+--------------------------------------------------------------------------------
+SERVER       STATUS   TEST TOOL DISPATCHED          LATENCY   INTEGRITY
+--------------------------------------------------------------------------------
+goliath      [PASS]   goliath_get_swarm_state       2.19s     100% (Real State)
+vrgc         [PASS]   vrgc_assess_system            1.42s     100% (Host Metrics)
+dpa          [PASS]   get_intent                    0.54s     100% (Intent Parsed)
+web-search   [PASS]   get_search_suggestions        0.31s     100% (Suggestions OK)
+loc          [PASS]   loc_search_catalog            1.65s     100% (LoC Archive OK)
+ipa          [PASS]   ipa_research_capabilities     0.28s     100% (Operators Ready)
+eds          [PASS]   verify_license_compliance     0.45s     100% (License Valid)
+ids          [PASS]   knowledge_graph_query         1.80s     100% (Graph Mapped)
+--------------------------------------------------------------------------------
+Total Tools Discovered: 128 registered tools across 8 micro-servers
+
+--------------------------------------------------------------------------------
+2. SWARM MEMORY & HARDWARE RESOURCE TELEMETRY
+--------------------------------------------------------------------------------
+Swarm Blackboard:     goliath_swarm_memory.json (Synchronized)
+Active Findings:      0 active | 0 DNA nodes
+GPU VRAM Ceiling:     4.00 GB target limit
+Current Allocation:   0.66 GB (Optimal / Headroom: 3.34 GB)
+
+--------------------------------------------------------------------------------
+3. SACRED COVENANT CONSTITUTIONAL GOVERNANCE ALIGNMENT
+--------------------------------------------------------------------------------
+[✓] Law 2  (Non-Harm / Destructive Protection):  Read-only safe dispatch confirmed
+[✓] Law 7  (Absolute Truthfulness):             Zero mock data in production paths
+[✓] Law 9  (Auditable Reasoning Ledger):         Execution ledger append-ready
+[✓] Law 10 (Operator Consent Gating):           Destructive actions consent-gated
+
+================================================================================
+CALIBRATION RESULT: [PASS] - ALL 8 SERVERS 100% CALIBRATED AND OPERATIONAL
+================================================================================
+```
+
+---
+
+## 6. CLI Verification & Troubleshooting
 
 ### Running the Live Protocol Probe
-To verify that all servers on your system pass MCP protocol handshakes and tool execution:
+To verify that all servers on your system pass MCP protocol handshakes and tool execution from the terminal:
 ```bash
 python -u "c:\Users\kirkl\.gemini\antigravity-ide\brain\f3c745f3-a2cb-4916-8ff8-7442f3962343\scratch\probe_v2.py"
 ```

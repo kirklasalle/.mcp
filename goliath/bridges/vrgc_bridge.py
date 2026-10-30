@@ -147,7 +147,7 @@ class VRGCBridge:
                         "python_version": "3.10",
                         "pytorch_version": "2.6+",
                         "cuda_available": True,
-                        "project_root": self.project_root
+                        "project_root": str(self.project_root)
                     },
                     "sacred_covenant": {
                         "status": "ACTIVE",
@@ -183,7 +183,7 @@ class VRGCBridge:
                 "sacred_covenant": "PROTECTED"
             }
         
-        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+        return [TextContent(type="text", text=json.dumps(result, indent=2, default=str))]
     
     def get_bridge_info(self) -> Dict[str, Any]:
         """Get bridge information."""

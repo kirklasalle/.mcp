@@ -20,6 +20,7 @@ The `.mcp` monorepo is engineered to provide modular, resilient, and governance-
 2. **Honest Error Contracts:** Errors must never be disguised as valid responses (`isError: false`). If a tool fails or throws an exception, the MCP envelope must return `isError: true`.
 3. **Project Agnosticism:** Micro-servers must remain free of hardcoded host paths, machine-specific disk drives (`F:/`), or proprietary repository assumptions.
 4. **Constitutional Governance:** Destructive or file-modifying tools are bounded by Kirk LaSalle's **Agentic Sacred Covenant** (Laws 2, 9, and 10), mandating explicit consent and append-only audit logging.
+5. **MCP-First Tooling Protocol:** AI agents and engineering workflows MUST invoke `.mcp` micro-servers as initial tools (hardware telemetry, swarm memory, documentation indexing, deep research) before executing modifications. All updates to `.nexus` documentation must be performed strictly as the final step.
 
 ---
 
@@ -188,7 +189,7 @@ When connecting a micro-server to Goliath:
 Every server must pass the automated protocol probe prior to deployment:
 
 ```bash
-python -u "c:\Users\kirkl\.gemini\antigravity-ide\brain\f3c745f3-a2cb-4916-8ff8-7442f3962343\scratch\probe_v2.py"
+python -u tests/probe_v2.py
 ```
 
 The probe verifies:

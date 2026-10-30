@@ -404,7 +404,7 @@ CALIBRATION RESULT: [PASS] - ALL 8 SERVERS 100% CALIBRATED AND OPERATIONAL
 ### Running the Live Protocol Probe
 To verify that all servers on your system pass MCP protocol handshakes and tool execution from the terminal:
 ```bash
-python -u "c:\Users\kirkl\.gemini\antigravity-ide\brain\f3c745f3-a2cb-4916-8ff8-7442f3962343\scratch\probe_v2.py"
+python -u tests/probe_v2.py
 ```
 **Expected Output:**
 ```

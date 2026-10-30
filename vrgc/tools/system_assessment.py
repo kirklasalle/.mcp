@@ -347,7 +347,7 @@ async def vrgc_assess_system(params: Optional[Dict[str, Any]] = None) -> Dict[st
     Works standalone or enhanced with IDS.
     """
     try:
-        project_root = params.get("project_root", "d:/Projects/impressioncore") if params else "d:/Projects/impressioncore"
+        project_root = params.get("project_root") if params else None
         
         assessor = VRGCSystemAssessment(project_root)
         result = await assessor.generate_comprehensive_assessment()

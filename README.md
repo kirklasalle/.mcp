@@ -10,6 +10,9 @@
 
 ![Model Context Protocol (MCP) Enterprise Tooling Fleet](assets/images/hero_banner.jpg)
 
+> [!IMPORTANT]
+> **Sovereign Operational Protocol**: In accordance with Kirk LaSalle's executive directives, **`.mcp` serves as the initial tooling tier** for all AI agents and engineering workflows across the Master Projects ecosystem. Agents MUST invoke `.mcp` servers first (system health, telemetry, swarm memory, research, documentation indexing) before executing codebase changes. Conversely, **`.nexus` is strictly the terminal documentation layer** to be updated and appended only after all modifications and audits are complete.
+
 ---
 
 ## 📚 Fleet Documentation Suite
@@ -19,6 +22,7 @@ Comprehensive technical, product, and operational guides are provided across the
 | Document | Purpose & Description |
 | :--- | :--- |
 | 📑 [**Product Requirements Document (PRD)**](docs/PRD.md) | Executive vision, system architecture, micro-server requirements, and roadmap. |
+| 📊 [**Market Research & Positioning**](docs/MARKET_RESEARCH.md) | Global 2026 MCP ecosystem analysis, competitor benchmarking, moats, and TAM. |
 | 👤 [**User Guide**](docs/USER_GUIDE.md) | 1-click client setup (Claude, Antigravity, Cursor) and practical everyday workflows. |
 | 🛠️ [**Developer Guide**](docs/DEVELOPER_GUIDE.md) | Protocol standards, stdio isolation, tool authoring, and CI probe verification. |
 | 🏛️ [**Architecture Deep Dive**](shared/MCP_ARCHITECTURE_DOCUMENTATION.md) | Single Source of Truth for system components, bridge design, and VRAM management. |

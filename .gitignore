@@ -46,3 +46,4 @@ ENV/
 # Caches and runtime databases
 .cache/
 */.cache/
+*.pkl

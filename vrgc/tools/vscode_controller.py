@@ -37,8 +37,8 @@ class VRGCVSCodeController:
     - Git operations
     """
     
-    def __init__(self, project_root: str = "d:/Projects/impressioncore"):
-        self.project_root = Path(project_root)
+    def __init__(self, project_root: Optional[str] = None):
+        self.project_root = Path(project_root) if project_root else Path(os.environ.get("MCP_WORKSPACE_ROOT", Path.cwd()))
         self.vscode_command = "code-insiders"  # or "code" for stable
         self.extension_apis = {
             "python": "ms-python.python",

@@ -147,7 +147,7 @@ class VRGCBridge:
                         "python_version": "3.10",
                         "pytorch_version": "2.6+",
                         "cuda_available": True,
-                        "project_root": self.project_root
+                        "project_root": str(self.project_root)
                     },
                     "sacred_covenant": {
                         "status": "ACTIVE",

@@ -50,8 +50,8 @@ class VRGCTrainingMonitor:
     - Optional IDS enhancement for training documentation
     """
     
-    def __init__(self, project_root: str = "d:/Projects/impressioncore"):
-        self.project_root = Path(project_root)
+    def __init__(self, project_root: Optional[str] = None):
+        self.project_root = Path(project_root) if project_root else Path(os.environ.get("MCP_WORKSPACE_ROOT", Path.cwd()))
         self.monitor_timestamp = datetime.now()
         self.quality_target = 10.0
         
@@ -344,7 +344,7 @@ async def vrgc_monitor_training(params: Optional[Dict[str, Any]] = None) -> Dict
     Works standalone or enhanced with IDS.
     """
     try:
-        project_root = params.get("project_root", "d:/Projects/impressioncore") if params else "d:/Projects/impressioncore"
+        project_root = params.get("project_root") if params else None
         quality_target = params.get("quality_target", 10.0) if params else 10.0
         
         monitor = VRGCTrainingMonitor(project_root)

@@ -8,6 +8,7 @@
     "type": "git",
     "url": "https://github.com/kirklasalle/.mcp.git"
   },
+  "scripts": {
     "test": "python -c \"import importlib; print('Fleet OK')\"",
     "start:goliath": "python goliath/server.py",
     "start:ids": "python ids/server_ai_enhanced.py",

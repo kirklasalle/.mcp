@@ -1,84 +1,100 @@
 {
   "mcpServers": {
+    "goliath": {
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\goliath\\server.py"
+      ],
+      "cwd": "D:\\Projects\\.mcp\\goliath",
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1",
+        "GOLIATH_DEBUG": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\goliath;D:\\Projects\\.mcp"
+      }
+    },
     "ids": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\ids\\server_ai_enhanced.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\ids\\server_ai_enhanced.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\ids",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\ids;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\ids;D:\\Projects\\.mcp"
       }
     },
     "eds": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\eds\\server_enhanced.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\eds\\server_enhanced.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\eds",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\eds;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\eds;D:\\Projects\\.mcp"
       }
     },
     "ipa": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\ipa\\server_ultimate.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\ipa\\server_ultimate.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\ipa",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\ipa;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
-      }
-    },
-    "goliath": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\goliath\\server.py"],
-      "cwd": "D:\\Projects\\.mcp\\goliath",
-      "env": {
-        "GOLIATH_DEBUG": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\goliath;D:\\Projects\\.mcp",
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\ipa;D:\\Projects\\.mcp"
       }
     },
     "vrgc": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\vrgc\\server_enhanced.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\vrgc\\server_enhanced.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\vrgc",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\vrgc;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\vrgc;D:\\Projects\\.mcp"
       }
     },
     "dpa": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\dpa\\server.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\dpa\\server.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\dpa",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\dpa;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\dpa;D:\\Projects\\.mcp"
       }
     },
     "web-search": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\web-search\\server.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\web-search\\server.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\web-search",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\web-search;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\web-search;D:\\Projects\\.mcp"
       }
     },
     "loc": {
-      "command": "python",
-      "args": ["D:\\Projects\\.mcp\\loc\\server.py"],
+      "command": "G:\\Program Files\\Python314\\python.exe",
+      "args": [
+        "D:\\Projects\\.mcp\\loc\\server.py"
+      ],
       "cwd": "D:\\Projects\\.mcp\\loc",
       "env": {
-        "PYTHONPATH": "D:\\Projects\\.mcp\\loc;D:\\Projects\\.mcp",
         "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1"
+        "PYTHONUTF8": "1",
+        "PYTHONPATH": "D:\\Projects\\.mcp\\loc;D:\\Projects\\.mcp"
       }
     }
   }

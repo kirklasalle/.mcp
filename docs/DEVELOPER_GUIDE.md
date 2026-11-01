@@ -188,7 +188,7 @@ When connecting a micro-server to Goliath:
 Every server must pass the automated protocol probe prior to deployment:
 
 ```bash
-python -u "c:\Users\kirkl\.gemini\antigravity-ide\brain\f3c745f3-a2cb-4916-8ff8-7442f3962343\scratch\probe_v2.py"
+python -u tests/probe_v2.py
 ```
 
 The probe verifies:

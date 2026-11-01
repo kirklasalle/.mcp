@@ -14,12 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This major release consolidates the fleet under a single, unified repository layout (`dpa`, `eds`, `goliath`, `ids`, `ipa`, `loc`, `vrgc`, `web-search`), establishes strict protocol compliance with the Model Context Protocol (MCP) date-versioned standard (`2025-11-25`), and introduces robust protocol-isolation infrastructure.
 
 ### Added
+- **`LICENSE`**: Official Apache License, Version 2.0 ensuring enterprise protection and open-source adoption.
+- **`pyproject.toml` & `requirements.txt`**: Unified PEP 517/621 packaging standard supporting 1-command `pip install -e .` and `uv` workspace resolution.
+- **`scripts/configure_clients.py`**: Automated dynamic client configuration generator auto-detecting fleet root, Python executable, and host OS with `--install` support.
+- **`.github/workflows/ci.yml`**: Multi-OS automated GitHub Actions CI/CD matrix verifying protocol gate (8/8 OK) on Ubuntu, Windows, and macOS.
+- **Public Product Website (`D:\Projects\Websites\.mcp`)**: Interactive developer portal and command center featuring live telemetry, server explorer, terminal sandbox, and Chart.js competitive radar.
 - **`shared/stdio_guard.py`**: Protocol-safe stdio stream isolation. Duplicates file descriptor 1 and redirects Python/C-level `stdout` to `stderr`, completely eliminating JSON-RPC protocol corruption caused by stray prints, banners, and progress bars.
 - **`shared/sdk_adapter.py`**: Unified SDK wrapper providing consistent server instantiation, exception mapping to `isError=True` payloads, and JSON-RPC message serialization across both `FastMCP` and low-level `Server` implementations.
-- **Automated Probe Suite (`probe_v2.py`)**: Protocol and functional verification harness executing `initialize`, `tools/list`, positive tool execution, and negative tool handling (`isError=True`) against live servers.
+- **Automated Probe Suite (`tests/probe_v2.py`)**: Protocol and functional verification harness executing `initialize`, `tools/list`, positive tool execution, and negative tool handling (`isError=True`) against live servers.
 - **1-Click Client Configurations**: Pre-validated JSON configurations for Google Antigravity IDE (`antigravity_mcp_config.json`), Anthropic Claude Desktop (`claude_desktop_config.json`), Cursor/Windsurf (`mcp-settings.json`), and Nexus (`nexus-mcp-settings.json`).
 - **Comprehensive Documentation Suite**:
   - `docs/PRD.md`: Formal Product Requirements Document defining product architecture, functional specifications, and market positioning.
+  - `docs/MARKET_RESEARCH.md`: Global 2026 MCP ecosystem analysis, competitive benchmarking, moats, and financial TAM models.
+  - `docs/WEBSITE_REQUIREMENTS_AUDIT.md`: Complete audit and specification for the public digital presence.
   - `docs/USER_GUIDE.md`: End-user installation, 1-click IDE configuration, and tool workflow reference.
   - `docs/DEVELOPER_GUIDE.md`: Architecture manual, stdio stream safety, tool creation patterns, and testing guidelines.
   - `assets/images/`: Visual assets including repo hero banner, architecture schematic, user workflow diagram, and secure tool execution lifecycle.

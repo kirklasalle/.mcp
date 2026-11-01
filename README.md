@@ -19,6 +19,7 @@ Comprehensive technical, product, and operational guides are provided across the
 | Document | Purpose & Description |
 | :--- | :--- |
 | 📑 [**Product Requirements Document (PRD)**](docs/PRD.md) | Executive vision, system architecture, micro-server requirements, and roadmap. |
+| 📊 [**Market Research & Positioning**](docs/MARKET_RESEARCH.md) | Global 2026 MCP ecosystem analysis, competitor benchmarking, moats, and TAM. |
 | 👤 [**User Guide**](docs/USER_GUIDE.md) | 1-click client setup (Claude, Antigravity, Cursor) and practical everyday workflows. |
 | 🛠️ [**Developer Guide**](docs/DEVELOPER_GUIDE.md) | Protocol standards, stdio isolation, tool authoring, and CI probe verification. |
 | 🏛️ [**Architecture Deep Dive**](shared/MCP_ARCHITECTURE_DOCUMENTATION.md) | Single Source of Truth for system components, bridge design, and VRAM management. |

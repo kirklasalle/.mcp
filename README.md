@@ -10,9 +10,6 @@
 
 ![Model Context Protocol (MCP) Enterprise Tooling Fleet](assets/images/hero_banner.jpg)
 
-> [!IMPORTANT]
-> **Sovereign Operational Protocol**: In accordance with Kirk LaSalle's executive directives, **`.mcp` serves as the initial tooling tier** for all AI agents and engineering workflows across the Master Projects ecosystem. Agents MUST invoke `.mcp` servers first (system health, telemetry, swarm memory, research, documentation indexing) before executing codebase changes. Conversely, **`.nexus` is strictly the terminal documentation layer** to be updated and appended only after all modifications and audits are complete.
-
 ---
 
 ## 📚 Fleet Documentation Suite

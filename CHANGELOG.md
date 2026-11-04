@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **IDS startup crash on a fresh checkout**: `server_ai_enhanced.py` raised `NameError: name 'nx' is not defined` when no graph cache existed and `numpy` was not installed, because `networkx` was imported inside the optional AI-library guard. A leftover `knowledge_graph.pkl` hid it wherever the server had already run. `networkx` is now imported unconditionally (it is a hard dependency of `graph_bridge`), and `tests/test_ids_fresh_start.py` starts the server with an empty cache and `numpy` blocked.
 - **Probe exit status**: `tests/probe_v2.py` always exited 0, so the CI probe step could not fail. It now exits 1 unless every probed server reports OK (`gate_exit_code`). Its IDS single-file analysis targets this repository's `README.md` instead of the host project's `STATUS.md`, so the probe is valid in a standalone checkout.
+- **Windows fresh-start regression harness**: decode captured IDS subprocess output explicitly as UTF-8 with replacement, avoiding failures when Unicode diagnostics are emitted on Windows runners using a legacy console code page.
 
 ---
 

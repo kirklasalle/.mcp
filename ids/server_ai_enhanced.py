@@ -32,7 +32,6 @@ import re
 from dataclasses import dataclass, asdict
 from collections import defaultdict
 import sqlite3
-import pickle
 
 # Protect the MCP protocol stream before importing modules that may print.
 _FLEET_ROOT = Path(__file__).resolve().parent.parent
@@ -40,7 +39,11 @@ sys.path.insert(0, str(_FLEET_ROOT))
 from shared.stdio_guard import protect_stdout, stdio_server  # noqa: E402
 protect_stdout()
 
-from graph_bridge import GraphBridge
+from graph_bridge import GraphBridge, read_graph_json, write_graph_json
+from shared.workspace import resolve_workspace_root
+
+# Hard dependency (graph_bridge needs it), so keep it outside the optional AI-library guard below.
+import networkx as nx
 
 # Core MCP imports
 from mcp.server import Server
@@ -61,7 +64,6 @@ try:
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
     from sklearn.cluster import KMeans
-    import networkx as nx
     HAS_AI_LIBS = True
 except Exception as e:
     HAS_AI_LIBS = False
@@ -124,7 +126,7 @@ class AIEnhancedIDSCore:
         ids_dir = Path(__file__).resolve().parent
         self.db_path = ids_dir / ".cache" / "ai_enhanced.db"
         self.cache_path = ids_dir / ".cache" / "ai_cache"
-        self.knowledge_graph_path = ids_dir / ".cache" / "knowledge_graph.pkl"
+        self.knowledge_graph_path = ids_dir / ".cache" / "knowledge_graph.json"
         
         # Ensure directories exist
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -191,8 +193,7 @@ class AIEnhancedIDSCore:
         """Load or create knowledge graph"""
         if self.knowledge_graph_path.exists():
             try:
-                with open(self.knowledge_graph_path, 'rb') as f:
-                    self.knowledge_graph = pickle.load(f)
+                self.knowledge_graph = read_graph_json(self.knowledge_graph_path)
                 logger.info("📊 Knowledge graph loaded from cache")
             except Exception as e:
                 logger.warning(f"Failed to load knowledge graph: {e}")
@@ -203,8 +204,7 @@ class AIEnhancedIDSCore:
     def _save_knowledge_graph(self):
         """Save knowledge graph to cache"""
         try:
-            with open(self.knowledge_graph_path, 'wb') as f:
-                pickle.dump(self.knowledge_graph, f)
+            write_graph_json(self.knowledge_graph, self.knowledge_graph_path)
             logger.info("📊 Knowledge graph saved to cache")
         except Exception as e:
             logger.error(f"Failed to save knowledge graph: {e}")
@@ -572,7 +572,7 @@ class GTX1050TiOptimizedModel(nn.Module):
         return entities
 
 # Initialize AI-Enhanced IDS
-ROOT_PATH = Path(os.getcwd())
+ROOT_PATH = resolve_workspace_root(Path(__file__).resolve().parents[2])
 ai_ids = AIEnhancedIDSCore(ROOT_PATH)
 
 # MCP Server Setup
@@ -673,25 +673,6 @@ async def handle_list_tools() -> List[Tool]:
                         "type": "boolean",
                         "description": "Include documentation quality metrics",
                         "default": True
-                    }
-                }
-            }
-        ),
-        Tool(
-            name="neural_forge_integration",
-            description="Interface with Neural Forge training system for B1 model optimization insights",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "integration_type": {
-                        "type": "string",
-                        "enum": ["training_status", "model_metrics", "optimization_suggestions", "hardware_utilization"],
-                        "description": "Type of Neural Forge integration"
-                    },
-                    "model_name": {
-                        "type": "string",
-                        "description": "Name of model to analyze",
-                        "default": "impressioncore-b1"
                     }
                 }
             }
@@ -871,19 +852,28 @@ async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> List[TextCon
             files_analyzed = []
             
             search_path = Path(target_path) if analysis_scope != "full_project" else ROOT_PATH
-            
-            for ext in doc_counts.keys():
-                for file_path in search_path.rglob(f'*{ext}'):
-                    if any(skip in str(file_path) for skip in ['.git', '__pycache__', '.venv', 'backup']):
-                        continue
-                    
-                    try:
-                        file_size = file_path.stat().st_size
-                        doc_counts[ext] += 1
-                        total_size += file_size
-                        files_analyzed.append(str(file_path))
-                    except Exception:
-                        continue
+            if analysis_scope == "single_file":
+                candidates = [search_path] if search_path.is_file() else []
+            else:
+                candidates = (
+                    file_path
+                    for ext in doc_counts
+                    for file_path in search_path.rglob(f'*{ext}')
+                )
+
+            for file_path in candidates:
+                if file_path.suffix not in doc_counts:
+                    continue
+                if any(skip in str(file_path) for skip in ['.git', '__pycache__', '.venv', 'backup']):
+                    continue
+
+                try:
+                    file_size = file_path.stat().st_size
+                    doc_counts[file_path.suffix] += 1
+                    total_size += file_size
+                    files_analyzed.append(str(file_path))
+                except OSError:
+                    continue
             
             response += f"**Documentation Statistics:**\n"
             for ext, count in doc_counts.items():
@@ -905,7 +895,14 @@ async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> List[TextCon
                 
                 # Check for code documentation
                 py_files_with_docs = 0
-                for file_path in search_path.rglob('*.py'):
+                for file_path in (
+                    files_analyzed
+                    if analysis_scope == "single_file"
+                    else search_path.rglob('*.py')
+                ):
+                    file_path = Path(file_path)
+                    if file_path.suffix != '.py':
+                        continue
                     try:
                         with open(file_path, 'r', encoding='utf-8') as f:
                             content = f.read()
@@ -935,62 +932,6 @@ async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> List[TextCon
                         response += "- Add more detailed markdown documentation\n"
                     if py_files_with_docs / max(doc_counts['.py'], 1) < 0.5:
                         response += "- Add docstrings to Python functions and classes\n"
-            
-            return [TextContent(type="text", text=response)]
-        
-        elif name == "neural_forge_integration":
-            integration_type = arguments.get("integration_type", "training_status")
-            model_name = arguments.get("model_name", "impressioncore-b1")
-            
-            logger.info(f"🔥 Neural Forge Integration: {integration_type}")
-            
-            response = f"🔥 **Neural Forge Integration**\n\n"
-            response += f"**Integration Type:** {integration_type}\n"
-            response += f"**Model:** {model_name}\n\n"
-            
-            # This would integrate with the actual Neural Forge system
-            # For now, providing mock data and integration points
-            
-            if integration_type == "training_status":
-                response += f"**B1 Training Status:**\n"
-                response += f"- Current Epoch: 42/100\n"
-                response += f"- Training Loss: 0.0234\n"
-                response += f"- Validation Loss: 0.0267\n"
-                response += f"- Conversation Quality Score: 8.7/10 🎯 (Target: 10/10)\n"
-                response += f"- GPU Utilization: 89% (GTX 1050 Ti)\n"
-                response += f"- VRAM Usage: 3.2GB/4GB\n"
-                response += f"- Training Speed: 2.3 batches/sec\n\n"
-                
-                response += f"**Next Optimization Steps:**\n"
-                response += f"- Increase learning rate by 10% for faster convergence\n"
-                response += f"- Implement curriculum learning for quality improvement\n"
-                response += f"- Add conversation quality validation hooks\n"
-            
-            elif integration_type == "hardware_utilization":
-                response += f"**GTX 1050 Ti Utilization:**\n"
-                response += f"- GPU Temperature: 78°C (Safe)\n"
-                response += f"- Power Draw: 68W/75W\n"
-                response += f"- Memory Clock: 1752MHz\n"
-                response += f"- Core Clock: 1354MHz\n"
-                response += f"- CUDA Cores Active: 743/768 (96.7%)\n\n"
-                
-                response += f"**Optimization Opportunities:**\n"
-                response += f"- 5% GPU headroom available\n"
-                response += f"- Memory bandwidth utilization: 87%\n"
-                response += f"- Recommend: Increase batch size by 1-2\n"
-            
-            else:
-                response += f"**Integration Status:**\n"
-                response += f"- Neural Forge connection: Active ✅\n"
-                response += f"- B1 model monitoring: Enabled ✅\n"
-                response += f"- Hardware optimization: Active ✅\n"
-                response += f"- Real-time metrics: Available ✅\n\n"
-                
-                response += f"**Available Integration Points:**\n"
-                response += f"- Training metrics webhook\n"
-                response += f"- Hardware monitoring API\n"
-                response += f"- Model quality assessment\n"
-                response += f"- Optimization recommendation engine\n"
             
             return [TextContent(type="text", text=response)]
         

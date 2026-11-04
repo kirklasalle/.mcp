@@ -5,15 +5,21 @@
 **Author:** Virtually Robotic GitHub Copilot  
 **Tags:** #vrgc/restart_guide.md #documentation #gpu_optimization #testing #training  
 **Category:** Documentation  
-**Status:** Active
+**Status:** Superseded by current project-local MCP verification.
 
-### Before Restart - Status Confirmed ✅
-- ✅ All 5 VRGC tools operational (5/5 success rate)
-- ✅ MCP server properly configured in `.vscode/mcp.json`
-- ✅ Dependencies installed (GPUtil, psutil, torch)
-- ✅ File integrity protocols active
-- ✅ MCP protocol implementation verified (JSON-RPC over stdio)
-- ✅ Server successfully responds to initialize, tools/list, and tools/call
+> This guide's setup, dependency, and five-tool claims are a 2025 snapshot and
+> do not describe the current SpaceEntropyCompression profile. The current
+> VRGC catalog contains ten tools: `vrgc_self_heal_code`, `vrgc_web_fetch`,
+> `vrgc_web_search`, `vrgc_download_file`, `vrgc_ftp_access`,
+> `vrgc_api_request`, `vrgc_assess_system`, `vrgc_monitor_training`,
+> `vrgc_optimize_hardware`, and `vrgc_verify_covenant`.
+> `vrgc_analyze_intelligence` is not currently advertised. Download, FTP, and
+> API-request calls require per-call approval and the mutation opt-in. See the
+> project-local MCP verification in `../README.md`.
+
+The current local protocol gate verifies VRGC initialization, tool schemas,
+three read-only operations, and denial of download/FTP calls without explicit
+approval. This is not a functional certification of all ten tools.
 
 ### Restart Steps
 1. **Save all work** (if needed)

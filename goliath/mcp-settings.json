@@ -1,13 +1,15 @@
 {
   "mcpServers": {
-    "impressioncore-goliath": {
-      "command": "python",
+    "goliath-optional": {
+      "command": "py",
       "args": [
-        "D:\\Projects\\impressioncore\\.mcp\\impressioncore-goliath\\server.py"
+        "-3.12",
+        "${workspaceFolder}\\server.py"
       ],
+      "cwd": "${workspaceFolder}",
       "env": {
-        "GOLIATH_DEBUG": "1",
-        "PYTHONPATH": "D:\\Projects\\impressioncore\\.mcp\\impressioncore-goliath"
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..\\..",
+        "MCP_ALLOW_MUTATIONS": "0"
       }
     }
   }

@@ -60,6 +60,7 @@ from collections import defaultdict, deque
 FLEET_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(FLEET_ROOT))
 from shared.stdio_guard import protect_stdout, stdio_server  # noqa: E402
+from shared.workspace import resolve_workspace_root  # noqa: E402
 protect_stdout()
 
 # Configure professional logging
@@ -245,8 +246,6 @@ class UltimateSearchEngine:
         try:
             # Create SSL context
             ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
             
             # Make actual HTTP request to Google
             req = urllib.request.Request(search_url, headers=headers)
@@ -384,8 +383,6 @@ class UltimateSearchEngine:
         try:
             req = urllib.request.Request(search_url, headers=headers)
             ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
             
             with urllib.request.urlopen(req, context=ssl_context, timeout=10) as response:
                 if response.getcode() == 200:
@@ -454,8 +451,6 @@ class UltimateSearchEngine:
         try:
             req = urllib.request.Request(search_url, headers=headers)
             ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
             
             with urllib.request.urlopen(req, context=ssl_context, timeout=10) as response:
                 if response.getcode() == 200:
@@ -631,8 +626,6 @@ class UltimateSearchEngine:
             
             req = urllib.request.Request(search_url, headers=headers)
             ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
             
             with urllib.request.urlopen(req, context=ssl_context, timeout=10) as response:
                 if response.getcode() == 200:
@@ -1336,7 +1329,9 @@ class ImpressionCoreIPAUltimate:
         self.graph_bridge = None
         if GRAPH_INTEGRATION_AVAILABLE:
             try:
-                self.graph_bridge = GraphBridge(root_path=Path(r"d:\Projects\impressioncore"))
+                self.graph_bridge = GraphBridge(
+                    root_path=resolve_workspace_root(Path(__file__).resolve().parents[2])
+                )
                 logger.info("🕸️ IDS Knowledge Graph Bridge Connected!")
             except Exception as e:
                 logger.error(f"❌ Failed to connect Knowledge Graph Bridge: {e}")

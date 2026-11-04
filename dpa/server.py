@@ -22,9 +22,21 @@ sys.path.insert(0, str(CURRENT_DIR))
 from shared.stdio_guard import protect_stdout, stdio_server  # noqa: E402
 protect_stdout()
 from shared.sdk_adapter import is_error_result, to_text, ToolExecutionError  # noqa: E402
+from shared.mutation_gate import APPROVED_PROPERTY, mutation_denial  # noqa: E402
 
 from nlu_bridge import DPANLUBridge
 from ids_bridge import IDSBridge
+
+# IDS bridge tools that run an external script and therefore need operator approval.
+MUTATION_REQUIRED_TOOLS = {"ids_update", "ids_tag", "ids_sync", "ids_generate_docs"}
+
+
+def _approval_schema() -> Dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": {"approved": dict(APPROVED_PROPERTY)},
+        "required": [],
+    }
 
 # MCP imports
 from mcp.server import Server
@@ -101,24 +113,10 @@ dpa_core = DPACore()
 
 
 # Accessibility Integration (absolute import for script execution)
-from accessibility.accessibility_integration import AccessibilityIntegrationManager
-from accessibility.accessibility_manager import AccessibilityManager
-from accessibility.user_experience_manager import UserExperienceManager
-from core.query_processor import QueryProcessor
-from nlp.nlu_engine import NLUEngine
+from accessibility.accessibility_integration import AccessibilityIntegration
 
-# Initialize accessibility subsystem components explicitly
-_accessibility_manager = AccessibilityManager()
-_ux_manager = UserExperienceManager(_accessibility_manager)
-_query_processor = QueryProcessor()
-_nlu_engine = NLUEngine()
-accessibility = AccessibilityIntegrationManager(
-    accessibility_manager=_accessibility_manager,
-    ux_manager=_ux_manager,
-    query_processor=_query_processor,
-    nlu_engine=_nlu_engine,
-    user_id=None
-)
+accessibility = AccessibilityIntegration(user_id=None)
+accessibility.initialize()
 
 # MCP Server Setup
 server = Server("dpa")
@@ -169,18 +167,18 @@ async def handle_list_tools() -> List[Tool]:
         ),
         Tool(
             name="ids_update",
-            description="Trigger IDS update operation",
-            inputSchema={"type": "object", "properties": {}, "required": []}
+            description="Trigger IDS update operation (requires MCP_ALLOW_MUTATIONS=1 and approved=true)",
+            inputSchema=_approval_schema()
         ),
         Tool(
             name="ids_tag",
-            description="Trigger IDS tag operation",
-            inputSchema={"type": "object", "properties": {}, "required": []}
+            description="Trigger IDS tag operation (requires MCP_ALLOW_MUTATIONS=1 and approved=true)",
+            inputSchema=_approval_schema()
         ),
         Tool(
             name="ids_sync",
-            description="Trigger IDS sync operation",
-            inputSchema={"type": "object", "properties": {}, "required": []}
+            description="Trigger IDS sync operation (requires MCP_ALLOW_MUTATIONS=1 and approved=true)",
+            inputSchema=_approval_schema()
         ),
         Tool(
             name="ids_status",
@@ -200,8 +198,8 @@ async def handle_list_tools() -> List[Tool]:
         ),
         Tool(
             name="ids_generate_docs",
-            description="Trigger IDS documentation generation",
-            inputSchema={"type": "object", "properties": {}, "required": []}
+            description="Trigger IDS documentation generation (requires MCP_ALLOW_MUTATIONS=1 and approved=true)",
+            inputSchema=_approval_schema()
         ),
         Tool(
             name="shutdown",
@@ -282,6 +280,10 @@ async def handle_list_tools() -> List[Tool]:
 async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
     """Handle tool calls for DPA tools"""
     try:
+        if name in MUTATION_REQUIRED_TOOLS:
+            denial = mutation_denial(name, arguments)
+            if denial:
+                return _ok(denial)
         if name == "analyze":
             text = arguments.get("text", "")
             result = await dpa_core.nlu.analyze_async(text)

@@ -5,7 +5,13 @@
 **Author:** Virtually Robotic GitHub Copilot  
 **Tags:** #vrgc/readme_web_enhanced.md #api #command_line #deployment #documentation #memory_management #performance #pytorch #security #testing #training #transformer #web_interface  
 **Category:** Documentation  
-**Status:** Active
+**Status:** Historical design document; not a current implementation contract.
+
+> This document describes proposed capabilities and counts that are not
+> present in the current project-local VRGC catalog. Consult
+> [`RESTART_GUIDE.md`](RESTART_GUIDE.md) and the project-local probe results
+> for the current tool surface and tested behavior. Do not treat the feature
+> lists or performance claims below as verified.
 
 ## 🌐 Revolutionary 30+ Tool Architecture with Internet Access
 

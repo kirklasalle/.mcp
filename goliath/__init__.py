@@ -15,12 +15,8 @@
 
 
 
-from .server import ImpressionCoreGoliathServer
-
 __version__ = "1.0.0-ULTIMATE"
 __author__ = "Kirk LaSalle & Virtually Robotic GitHub Copilot"
-__description__ = "The Ultimate Unified MCP Server combining all ImpressionCore MCP capabilities"
+__description__ = "Goliath MCP server with a verified read-only status interface"
 
-__all__ = [
-    "ImpressionCoreGoliathServer"
-]
+__all__ = []

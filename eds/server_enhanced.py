@@ -29,6 +29,7 @@ from typing import Any, Dict, List, Optional, Sequence, Union
 from urllib.parse import urljoin, urlparse
 import hashlib
 import time
+from urllib.robotparser import RobotFileParser
 
 # Enhanced HTTP and scraping
 import aiohttp
@@ -43,6 +44,7 @@ import io
 _FLEET_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_FLEET_ROOT))
 from shared.stdio_guard import protect_stdout, stdio_server  # noqa: E402
+from shared.network_safety import validate_public_https_url  # noqa: E402
 protect_stdout()
 
 # Curation Engine
@@ -88,51 +90,51 @@ class ImpressionCoreEDSEnhanced:
     def __init__(self):
         self.session = None
         self.scraped_content = []
-        self.base_path = Path(__file__).parent
-        self.cache_dir = self.base_path / "cache"
-        self.cache_dir.mkdir(exist_ok=True)
+        self.base_path = _FLEET_ROOT
+        self.cache_dir = Path(os.getenv("MCP_CACHE_DIR") or (_FLEET_ROOT / ".cache")) / "eds"
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
         
         # Enhanced source configuration
         self.sources = {
             "mit_ocw": {
                 "base_url": "https://ocw.mit.edu",
-                "license": "Creative Commons Attribution-NonCommercial-ShareAlike",
+                "license": "varies by item; verify the item-level terms",
                 "api_available": True,
                 "multimodal": True
             },
             "khan_academy": {
                 "base_url": "https://www.khanacademy.org",
-                "license": "Creative Commons Attribution-NonCommercial-ShareAlike",
+                "license": "varies by item; verify the item-level terms",
                 "api_available": True,
                 "multimodal": True
             },
             "wikipedia": {
                 "base_url": "https://en.wikipedia.org",
-                "license": "Creative Commons Attribution-ShareAlike",
+                "license": "varies by page and media item; verify item-level terms",
                 "api_available": True,
                 "multimodal": True
             },
             "arxiv": {
                 "base_url": "https://arxiv.org",
-                "license": "Open Access (varies by paper)",
+                "license": "varies by paper; verify the article-level license",
                 "api_available": True,
                 "multimodal": True
             },
             "coursera_open": {
                 "base_url": "https://www.coursera.org",
-                "license": "Creative Commons (selected courses)",
+                "license": "varies by course; verify course-level terms",
                 "api_available": False,
                 "multimodal": True
             },
             "edx_open": {
                 "base_url": "https://www.edx.org",
-                "license": "Creative Commons (selected courses)",
+                "license": "varies by course; verify course-level terms",
                 "api_available": False,
                 "multimodal": True
             },
             "youtube_edu": {
                 "base_url": "https://www.youtube.com",
-                "license": "Creative Commons (selected videos)",
+                "license": "varies by video; verify item-level terms",
                 "api_available": True,
                 "multimodal": True
             }
@@ -177,24 +179,26 @@ class ImpressionCoreEDSEnhanced:
             robots_url = urljoin(base_url, '/robots.txt')
             session = await self.get_session()
             
-            async with session.get(robots_url) as response:
+            validate_public_https_url(robots_url)
+            async with session.get(robots_url, allow_redirects=False) as response:
                 if response.status == 200:
                     robots_content = await response.text()
-                    # Basic robots.txt parsing - allow if no explicit disallow for our user agent
-                    if 'ImpressionCore' in robots_content and 'Disallow:' in robots_content:
-                        return False
-                    return True
-                return True  # Assume allowed if no robots.txt
+                    parser = RobotFileParser()
+                    parser.set_url(robots_url)
+                    parser.parse(robots_content.splitlines())
+                    return parser.can_fetch("*", base_url)
+                return False
         except Exception as e:
             logger.warning(f"⚠️ Robots.txt check failed for {base_url}: {e}")
-            return True  # Default to allowed
+            return False
     
     async def detect_license(self, url: str) -> Dict[str, Any]:
         """Detect license information from webpage"""
         try:
+            validate_public_https_url(url)
             session = await self.get_session()
             
-            async with session.get(url) as response:
+            async with session.get(url, allow_redirects=False) as response:
                 if response.status == 200:
                     content = await response.text()
                     soup = BeautifulSoup(content, 'html.parser')
@@ -214,14 +218,20 @@ class ImpressionCoreEDSEnhanced:
                             found_licenses.append(indicator)
                     
                     return {
-                        "licenses_detected": found_licenses,
+                        "license_indicators_observed": found_licenses,
                         "license_count": len(found_licenses),
-                        "likely_compliant": len(found_licenses) > 0
+                        "rights_status": "unverified",
+                        "human_review_required": True,
                     }
         except Exception as e:
             logger.warning(f"⚠️ License detection failed for {url}: {e}")
             
-        return {"licenses_detected": [], "license_count": 0, "likely_compliant": False}
+        return {
+            "license_indicators_observed": [],
+            "license_count": 0,
+            "rights_status": "unverified",
+            "human_review_required": True,
+        }
     
     async def scrape_mit_ocw_enhanced(self, course_id: str = "", topic: str = "") -> Dict[str, Any]:
         """
@@ -258,7 +268,7 @@ class ImpressionCoreEDSEnhanced:
                     
                     return {
                         "source": "MIT OpenCourseWare",
-                        "license": "Creative Commons Attribution-NonCommercial-ShareAlike",
+                        "license": "not established; verify item-level terms",
                         "topic": topic,
                         "course_id": course_id,
                         "scraped_at": datetime.now().isoformat(),
@@ -352,7 +362,7 @@ class ImpressionCoreEDSEnhanced:
                     
                     return {
                         "source": "Khan Academy",
-                        "license": "Creative Commons Attribution-NonCommercial-ShareAlike",
+                        "license": "not established; verify item-level terms",
                         "subject": subject,
                         "topic": topic,
                         "scraped_at": datetime.now().isoformat(),
@@ -435,7 +445,7 @@ class ImpressionCoreEDSEnhanced:
                                     
                                     return {
                                         "source": "Wikipedia",
-                                        "license": "Creative Commons Attribution-ShareAlike",
+                                        "license": "not established; verify item-level terms",
                                         "topic": topic,
                                         "title": data.get('title', topic),
                                         "extract": data.get('extract', ''),
@@ -826,7 +836,7 @@ async def handle_call_tool(name: str, arguments: Dict[str, Any]) -> Sequence[Tex
     🔥 ENHANCED TOOL HANDLER FOR REVOLUTIONARY EDS CAPABILITIES 🔥
     """
     try:
-        logger.info(f"🚀 Executing tool: {name} with args: {arguments}")
+        logger.info(f"🚀 Executing tool: {name}")
         
         if name == "scrape_mit_ocw_enhanced":
             result = await scraper.scrape_mit_ocw_enhanced(
@@ -1065,7 +1075,7 @@ def extract_training_examples(source_data: Dict[str, Any], topic: str,
     return examples
 
 async def verify_sacred_covenant_compliance(content_source: str, license_info: str, intended_use: str) -> Dict[str, Any]:
-    """Verify Sacred Covenant compliance"""
+    """Return a review checklist without making a legal or training-rights determination."""
     logger.info(f"⚖️ Verifying Sacred Covenant compliance for: {content_source}")
     
     compliance_result = {
@@ -1073,6 +1083,8 @@ async def verify_sacred_covenant_compliance(content_source: str, license_info: s
         "license_info": license_info,
         "intended_use": intended_use,
         "sacred_covenant_compliant": False,
+        "training_rights_confirmed": False,
+        "human_review_required": True,
         "compliance_details": {
             "license_compatible": False,
             "attribution_required": False,
@@ -1084,47 +1096,12 @@ async def verify_sacred_covenant_compliance(content_source: str, license_info: s
         "verification_notes": []
     }
     
-    # Check license compatibility
-    compatible_licenses = [
-        "creative commons", "cc-by", "cc-by-sa", "cc-by-nc", "cc-by-nc-sa",
-        "mit license", "apache", "bsd", "public domain", "open access"
-    ]
-    
-    license_lower = license_info.lower()
-    
-    for license_type in compatible_licenses:
-        if license_type in license_lower:
-            compliance_result["compliance_details"]["license_compatible"] = True
-            compliance_result["verification_notes"].append(f"Compatible license detected: {license_type}")
-            break
-    
-    # Check specific requirements
-    if "attribution" in license_lower or "cc-by" in license_lower:
-        compliance_result["compliance_details"]["attribution_required"] = True
-        compliance_result["verification_notes"].append("Attribution required")
-    
-    if "commercial" not in license_lower or "cc-by-nc" not in license_lower:
-        compliance_result["compliance_details"]["commercial_use_allowed"] = True
-        compliance_result["verification_notes"].append("Commercial use allowed")
-    
-    if "no derivatives" not in license_lower:
-        compliance_result["compliance_details"]["modification_allowed"] = True
-        compliance_result["verification_notes"].append("Modification allowed")
-    
-    # ImpressionCore compatibility check
-    if (compliance_result["compliance_details"]["license_compatible"] and 
-        compliance_result["compliance_details"]["modification_allowed"]):
-        compliance_result["compliance_details"]["impressioncore_compatible"] = True
-        compliance_result["verification_notes"].append("ImpressionCore B1 training compatible")
-    
-    # Overall Sacred Covenant compliance
-    if (compliance_result["compliance_details"]["license_compatible"] and 
-        compliance_result["compliance_details"]["impressioncore_compatible"]):
-        compliance_result["sacred_covenant_compliant"] = True
-        compliance_result["verification_notes"].append("✅ Sacred Covenant compliant")
-    else:
-        compliance_result["verification_notes"].append("❌ Sacred Covenant compliance requires review")
-    
+    compliance_result["verification_notes"].extend([
+        "The supplied license string is not independently verified.",
+        "Record-level terms, attribution, source policy, and intended use require human review.",
+        "This result does not authorize redistribution or model training.",
+    ])
+
     return compliance_result
 
 async def assess_content_quality_enhanced(content: str, topic: str, assessment_criteria: List[str], 
@@ -1230,10 +1207,12 @@ async def verify_enhanced_license_compliance(source: str, url: str, check_robots
         "source": source,
         "url": url,
         "verification_timestamp": datetime.now().isoformat(),
-        "robots_txt_compliant": True,
+        "robots_txt_compliant": None,
         "license_detected": None,
-        "terms_of_service_compliant": True,
+        "terms_of_service_compliant": None,
         "impressioncore_compatible": False,
+        "training_rights_confirmed": False,
+        "human_review_required": True,
         "verification_details": {
             "robots_check_performed": check_robots,
             "license_detection_performed": detect_license,
@@ -1243,47 +1222,29 @@ async def verify_enhanced_license_compliance(source: str, url: str, check_robots
     }
     
     try:
+        validate_public_https_url(url)
         # Check robots.txt if requested
         if check_robots:
             robots_compliant = await scraper.check_robots_txt(url)
             verification_result["robots_txt_compliant"] = robots_compliant
-            if robots_compliant:
-                verification_result["verification_details"]["compliance_score"] += 2.0
-                verification_result["recommendations"].append("✅ Robots.txt compliant")
-            else:
-                verification_result["recommendations"].append("⚠️ Robots.txt may restrict access")
+            verification_result["recommendations"].append(
+                "Robots policy observation is not permission or a license grant."
+                if robots_compliant
+                else "Robots policy could not be verified or access was disallowed."
+            )
         
         # Detect license if requested
         if detect_license:
             license_info = await scraper.detect_license(url)
             verification_result["license_detected"] = license_info
             
-            if license_info.get("likely_compliant", False):
-                verification_result["verification_details"]["compliance_score"] += 3.0
-                verification_result["recommendations"].append("✅ Compatible license detected")
-            else:
-                verification_result["recommendations"].append("⚠️ License compatibility unclear")
-        
-        # ImpressionCore compatibility assessment
-        if (verification_result["robots_txt_compliant"] and 
-            verification_result.get("license_detected", {}).get("likely_compliant", False)):
-            verification_result["impressioncore_compatible"] = True
-            verification_result["verification_details"]["compliance_score"] += 5.0
-            verification_result["recommendations"].append("✅ ImpressionCore B1 training compatible")
-        
-        # Final compliance score (out of 10)
-        max_score = 10.0
-        final_score = min(max_score, verification_result["verification_details"]["compliance_score"])
-        verification_result["verification_details"]["compliance_score"] = final_score
-        
-        if final_score >= 8.0:
-            verification_result["recommendations"].append("🔥 Excellent compliance - proceed with confidence")
-        elif final_score >= 6.0:
-            verification_result["recommendations"].append("✅ Good compliance - suitable for use")
-        elif final_score >= 4.0:
-            verification_result["recommendations"].append("⚠️ Moderate compliance - use with caution")
-        else:
-            verification_result["recommendations"].append("❌ Poor compliance - not recommended")
+            verification_result["recommendations"].append(
+                "Detected license text is an unverified hint, not a rights determination."
+            )
+        verification_result["recommendations"].append(
+            "Review item-level license, source terms, attribution, and intended use; "
+            "training rights remain unconfirmed."
+        )
             
     except Exception as e:
         logger.error(f"❌ License verification failed: {e}")

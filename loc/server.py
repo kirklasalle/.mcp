@@ -129,11 +129,7 @@ def loc_search_catalog(query: str, collection: Optional[str] = None, limit: int 
         
     except Exception as e:
         logger.error(f"LoC Catalog search failed: {e}")
-        return json.dumps({
-            "error": f"LoC search failed: {str(e)}",
-            "query": query,
-            "status": "error"
-        }, indent=2)
+        raise RuntimeError(f"loc_search_catalog_upstream_failure: {e}") from e
 
 
 @mcp.tool()
@@ -205,11 +201,7 @@ def loc_search_newspapers(terms: str, state: Optional[str] = None, year_start: O
         
     except Exception as e:
         logger.error(f"Chronicling America search failed: {e}")
-        return json.dumps({
-            "error": f"Chronicling America search failed: {str(e)}",
-            "query": terms,
-            "status": "error"
-        }, indent=2)
+        raise RuntimeError(f"loc_search_newspapers_upstream_failure: {e}") from e
 
 
 @mcp.tool()
@@ -227,8 +219,12 @@ def loc_get_item_metadata(item_url: str) -> str:
     
     # Ensure URL is properly formatted for JSON extraction
     parsed = urllib.parse.urlparse(item_url)
-    if not parsed.scheme or "loc.gov" not in parsed.netloc:
-        return json.dumps({"error": "Invalid URL. Must be a loc.gov item URL.", "status": "error"})
+    if parsed.scheme != "https" or parsed.hostname not in {
+        "loc.gov",
+        "www.loc.gov",
+        "chroniclingamerica.loc.gov",
+    }:
+        raise ValueError("item_url must be an HTTPS URL on an approved loc.gov host")
         
     query_param = "&fo=json" if parsed.query else "?fo=json"
     target_url = f"{item_url.rstrip('/')}/{query_param}"
@@ -272,11 +268,7 @@ def loc_get_item_metadata(item_url: str) -> str:
         
     except Exception as e:
         logger.error(f"LoC item metadata retrieval failed: {e}")
-        return json.dumps({
-            "error": f"Item metadata retrieval failed: {str(e)}",
-            "url": item_url,
-            "status": "error"
-        }, indent=2)
+        raise RuntimeError(f"loc_get_item_metadata_upstream_failure: {e}") from e
 
 
 @mcp.tool()

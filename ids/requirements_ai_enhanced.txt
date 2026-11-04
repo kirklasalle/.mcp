@@ -21,7 +21,7 @@ sentence-transformers>=2.2.0
 
 # Data Processing and Storage
 # sqlite3 is built into Python
-# pickle is built into Python
+# Graph caches are JSON; pickle is never used
 
 # Text Processing and Analysis
 python-Levenshtein>=0.21.0

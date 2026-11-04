@@ -145,32 +145,13 @@ class IPABridge:
         
         return tools
     
-    async def execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> List[TextContent]:
-        """Execute an IPA tool."""
-        internal_tool_name = tool_name.replace("ipa_", "")
-        
-        # Mock intelligent processing responses
-        if internal_tool_name == "list_google_operators":
-            result = {
-                "operators": [
-                    {"operator": "site:", "description": "Search within specific site", "example": "site:github.com"},
-                    {"operator": "filetype:", "description": "Search for specific file types", "example": "filetype:pdf"},
-                    {"operator": "intitle:", "description": "Search in page titles", "example": "intitle:tutorial"},
-                    {"operator": "\"\"", "description": "Exact phrase search", "example": "\"machine learning\""},
-                    {"operator": "-", "description": "Exclude terms", "example": "-wikipedia"}
-                ],
-                "total_operators": 50,
-                "category": arguments.get("category", "all")
-            }
-        else:
-            result = {
-                "operation": internal_tool_name,
-                "status": "completed",
-                "results": f"Intelligent processing completed for {arguments}",
-                "metadata": {"source": "IPA", "confidence": 0.9}
-            }
-        
-        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    async def execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """Report that this placeholder bridge has no real IPA dispatch."""
+        return {
+            "error": "bridge_not_implemented",
+            "bridge": self.bridge_name,
+            "tool": tool_name,
+        }
     
     def get_bridge_info(self) -> Dict[str, Any]:
         """Get bridge information."""

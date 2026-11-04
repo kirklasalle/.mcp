@@ -23,7 +23,12 @@ import logging
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 from enum import Enum
-import torch
+try:
+    import torch
+    HAS_TORCH = True
+except ImportError:
+    torch = None
+    HAS_TORCH = False
 from datetime import datetime
 
 # Import ImpressionCore utilities
@@ -132,7 +137,7 @@ class QueryProcessor:
     def _setup_device(self, device: Optional[str]) -> str:
         """Setup computing device with automatic fallback."""
         if device is None:
-            if torch.cuda.is_available():
+            if HAS_TORCH and torch.cuda.is_available():
                 device = "cuda"
                 self.logger.info(f"Using CUDA device: {torch.cuda.get_device_name(0)}")
             else:
@@ -412,7 +417,7 @@ class QueryProcessor:
     
     def _get_memory_usage(self) -> float:
         """Get current memory usage in MB."""
-        if torch.cuda.is_available() and self.device == "cuda":
+        if HAS_TORCH and torch.cuda.is_available() and self.device == "cuda":
             return torch.cuda.memory_allocated() / 1024 / 1024
         else:
             # Simplified CPU memory estimation
@@ -431,7 +436,7 @@ class QueryProcessor:
     
     def clear_cache(self) -> None:
         """Clear internal caches to free memory."""
-        if torch.cuda.is_available() and self.device == "cuda":
+        if HAS_TORCH and torch.cuda.is_available() and self.device == "cuda":
             torch.cuda.empty_cache()
         
         self.logger.info("Query processor cache cleared")

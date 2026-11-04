@@ -22,11 +22,17 @@ import json
 import os
 import sys
 import psutil
-import torch
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
 import glob
+
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    torch = None
+    TORCH_AVAILABLE = False
 
 # Import IDS integration (graceful failure if not available)
 try:
@@ -92,7 +98,7 @@ class VRGCTrainingMonitor:
                 continue
         
         # GPU monitoring
-        if torch.cuda.is_available():
+        if TORCH_AVAILABLE and torch.cuda.is_available():
             try:
                 torch.cuda.reset_peak_memory_stats()
                 memory_allocated = torch.cuda.memory_allocated() / 1024**3
@@ -231,7 +237,7 @@ class VRGCTrainingMonitor:
                     performance_monitor["disk_usage"][disk_path] = {"error": str(e)}
         
         # GPU performance monitoring
-        if torch.cuda.is_available():
+        if TORCH_AVAILABLE and torch.cuda.is_available():
             try:
                 gpu_props = torch.cuda.get_device_properties(0)
                 performance_monitor["gpu_performance"] = {

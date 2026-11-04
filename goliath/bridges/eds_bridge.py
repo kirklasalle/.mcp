@@ -128,20 +128,13 @@ class EDSBridge:
         
         return tools
     
-    async def execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> List[TextContent]:
-        """Execute an EDS tool."""
-        internal_tool_name = tool_name.replace("eds_", "")
-        
-        # Mock educational data responses
-        result = {
-            "operation": internal_tool_name,
-            "status": "completed",
-            "data": f"Educational content for {arguments}",
-            "license": "Creative Commons",
-            "source": "Educational Data Scraper"
+    async def execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """Report that this placeholder bridge has no real EDS dispatch."""
+        return {
+            "error": "bridge_not_implemented",
+            "bridge": self.bridge_name,
+            "tool": tool_name,
         }
-        
-        return [TextContent(type="text", text=json.dumps(result, indent=2))]
     
     def get_bridge_info(self) -> Dict[str, Any]:
         """Get bridge information."""

@@ -45,11 +45,53 @@ from urllib.robotparser import RobotFileParser
 FLEET_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(FLEET_ROOT))
 from shared.stdio_guard import protect_stdout  # noqa: E402
+from shared.network_safety import validate_public_https_url  # noqa: E402
+from shared.mutation_gate import APPROVED_PROPERTY, mutation_denial  # noqa: E402
+from shared.workspace import resolve_workspace_root  # noqa: E402
 protect_stdout()
 
-# Workspace the tools operate on (project-agnostic): env override, else current directory.
-project_root = Path(os.getenv("MCP_WORKSPACE_ROOT") or os.getcwd()).resolve()
+project_root = resolve_workspace_root(Path(__file__).resolve().parents[2])
 CACHE_DIR = Path(os.getenv("MCP_CACHE_DIR") or (FLEET_ROOT / ".cache")).resolve()
+MUTATION_REQUIRED_TOOLS = {
+    "vrgc_download_file",
+    "vrgc_ftp_access",
+    "vrgc_sandbox_execute",
+    "vrgc_war_game_refactor",
+}
+UNIMPLEMENTED_TOOL_NAMES = {
+    "vrgc_optimize_training_pipeline",
+    "vrgc_monitor_training_health",
+    "vrgc_prepare_deployment",
+    "vrgc_optimize_embeddings",
+    "vrgc_hardware_profiling",
+    "vrgc_sandbox_execute",
+    "vrgc_war_game_refactor",
+    "vrgc_web_monitor",
+    "vrgc_web_scrape",
+    "vrgc_research_assistant",
+    "vrgc_web_security_scan",
+    "vrgc_web_performance_test",
+    "vrgc_analyze_intelligence",
+    "vrgc_design_neural_architecture",
+    "vrgc_analyze_model_complexity",
+    "vrgc_optimize_layer_design",
+    "vrgc_validate_architecture",
+    "vrgc_generate_architecture_blueprint",
+}
+MAX_DOWNLOAD_BYTES = 100 * 1024 * 1024
+SENSITIVE_ARGUMENT_KEYS = {"password", "token", "api_key", "authorization", "secret", "credential"}
+
+
+def redact_sensitive_arguments(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: "[REDACTED]" if str(key).lower() in SENSITIVE_ARGUMENT_KEYS
+            else redact_sensitive_arguments(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [redact_sensitive_arguments(item) for item in value]
+    return value
 
 # Import enhanced VRGC tools
 try:
@@ -103,7 +145,7 @@ class VRGCEnhancedWebMCPServer:
         # Initialize HTTP client for web access
         self.http_client = httpx.AsyncClient(
             timeout=httpx.Timeout(30.0),
-            follow_redirects=True,
+            follow_redirects=False,
             limits=httpx.Limits(max_keepalive_connections=10, max_connections=100)
         )
         
@@ -830,11 +872,35 @@ class VRGCEnhancedWebMCPServer:
                 }
             ])
         
-        return tools
+        for tool in tools:
+            if tool["name"] in MUTATION_REQUIRED_TOOLS | {"vrgc_api_request"}:
+                properties = tool["inputSchema"].setdefault("properties", {})
+                properties["approved"] = dict(APPROVED_PROPERTY)
+
+        return [
+            tool for tool in tools
+            if tool["name"] not in UNIMPLEMENTED_TOOL_NAMES
+        ]
     
     async def call_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         """Execute a VRGC tool from the comprehensive 30+ tool suite with web access."""
-        self._log_info(f"Calling web-enhanced tool: {tool_name} with args: {arguments}")
+        self._log_info(
+            f"Calling web-enhanced tool: {tool_name} with args: "
+            f"{redact_sensitive_arguments(arguments)}"
+        )
+
+        if tool_name in UNIMPLEMENTED_TOOL_NAMES:
+            return {"error": "not_implemented", "tool": tool_name}
+
+        method = str(arguments.get("method", "GET")).upper()
+        requires_approval = (
+            tool_name in MUTATION_REQUIRED_TOOLS
+            or (tool_name == "vrgc_api_request" and method not in {"GET", "HEAD", "OPTIONS"})
+        )
+        if requires_approval:
+            denial = mutation_denial(tool_name, arguments)
+            if denial:
+                return denial
         
         try:
             # Phase 6: Web Access & Internet Integration
@@ -916,6 +982,7 @@ class VRGCEnhancedWebMCPServer:
             return {"error": "URL is required"}
         
         try:
+            await asyncio.to_thread(validate_public_https_url, url)
             # Check robots.txt if requested
             if respect_robots:
                 robots_allowed = await self._check_robots_txt(url)
@@ -1070,15 +1137,23 @@ class VRGCEnhancedWebMCPServer:
         
         if not url:
             return {"error": "URL is required"}
-        
+        if extract_archives:
+            return {"error": "archive_extraction_not_supported"}
+
         try:
+            await asyncio.to_thread(validate_public_https_url, url)
             # Determine filename and destination
             if not destination:
-                filename = url.split('/')[-1] or "downloaded_file"
+                filename = Path(urllib.parse.urlparse(url).path).name or "downloaded_file"
                 destination = self.download_directory / filename
             else:
-                destination = Path(destination)
-            
+                destination = Path(destination).expanduser()
+
+            download_root = self.download_directory.resolve()
+            destination = destination.resolve()
+            if not destination.is_relative_to(download_root):
+                return {"error": "destination_outside_download_directory"}
+
             # Create directory if needed
             destination.parent.mkdir(parents=True, exist_ok=True)
             
@@ -1097,6 +1172,8 @@ class VRGCEnhancedWebMCPServer:
                 
                 async with aiofiles.open(destination, "wb") as f:
                     async for chunk in response.aiter_bytes(chunk_size=8192):
+                        if downloaded + len(chunk) > MAX_DOWNLOAD_BYTES:
+                            raise ValueError("download_exceeds_100_mib_limit")
                         await f.write(chunk)
                         downloaded += len(chunk)
                         if verify_integrity:
@@ -1202,6 +1279,7 @@ class VRGCEnhancedWebMCPServer:
             return {"error": "URL is required"}
         
         try:
+            await asyncio.to_thread(validate_public_https_url, url)
             # Prepare headers
             request_headers = {"User-Agent": self.user_agent}
             request_headers.update(headers)
@@ -1640,11 +1718,9 @@ class VRGCEnhancedWebMCPServer:
         return {"error": "Hardware optimizer tool not available"}
     
     async def _verify_covenant(self, args: Dict[str, Any]) -> Dict[str, Any]:
-        """Covenant verification with web backup."""
+        """Verify critical-file integrity without changing files or permissions."""
         if self.covenant_guardian:
-            result = self.covenant_guardian.enforce_file_protection()
-            result["web_backup"] = "Cloud backup integration available"
-            return result
+            return self.covenant_guardian.verify_file_integrity()
         return {"error": "Covenant guardian tool not available"}
     
     async def _analyze_intelligence(self, args: Dict[str, Any]) -> Dict[str, Any]:

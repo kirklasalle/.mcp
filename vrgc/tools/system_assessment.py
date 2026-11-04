@@ -18,12 +18,18 @@
 import asyncio
 import json
 import psutil
-import torch
 import os
 import sys
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 from pathlib import Path
+
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    torch = None
+    TORCH_AVAILABLE = False
 
 # Import IDS integration (graceful failure if not available)
 try:
@@ -70,14 +76,15 @@ class VRGCSystemAssessment:
         hardware_info = {
             "assessment_type": "hardware_capabilities",
             "timestamp": self.assessment_timestamp.isoformat(),
-            "gpu_available": torch.cuda.is_available(),
+            "gpu_available": TORCH_AVAILABLE and torch.cuda.is_available(),
+            "pytorch_available": TORCH_AVAILABLE,
             "cpu_cores": psutil.cpu_count(),
             "ram_total_gb": psutil.virtual_memory().total / 1024**3,
             "ram_available_gb": psutil.virtual_memory().available / 1024**3,
         }
         
         # GPU-specific information
-        if torch.cuda.is_available():
+        if TORCH_AVAILABLE and torch.cuda.is_available():
             hardware_info.update({
                 "gpu_name": torch.cuda.get_device_name(0),
                 "gpu_memory_gb": torch.cuda.get_device_properties(0).total_memory / 1024**3,
@@ -102,11 +109,17 @@ class VRGCSystemAssessment:
         ecosystem_info = {
             "assessment_type": "pytorch_ecosystem",
             "timestamp": self.assessment_timestamp.isoformat(),
-            "pytorch_version": torch.__version__,
-            "cuda_available": torch.cuda.is_available(),
-            "cudnn_enabled": torch.backends.cudnn.enabled if torch.cuda.is_available() else False,
-            "mixed_precision": hasattr(torch.cuda.amp, 'autocast'),
-            "distributed_available": hasattr(torch.distributed, 'is_available') and torch.distributed.is_available(),
+            "pytorch_available": TORCH_AVAILABLE,
+            "pytorch_version": torch.__version__ if TORCH_AVAILABLE else None,
+            "cuda_available": TORCH_AVAILABLE and torch.cuda.is_available(),
+            "cudnn_enabled": (
+                torch.backends.cudnn.enabled if TORCH_AVAILABLE and torch.cuda.is_available() else False
+            ),
+            "mixed_precision": hasattr(torch.cuda.amp, 'autocast') if TORCH_AVAILABLE else False,
+            "distributed_available": (
+                hasattr(torch.distributed, 'is_available') and torch.distributed.is_available()
+                if TORCH_AVAILABLE else False
+            ),
         }
         
         # Capability scoring

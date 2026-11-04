@@ -17,8 +17,8 @@ Sacred Covenant Compliance: ACTIVE
 
 import os
 import ast
+import json
 import logging
-import pickle
 import networkx as nx
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Set, Tuple
@@ -26,13 +26,50 @@ from typing import Dict, List, Any, Optional, Set, Tuple
 # Setup logging
 logger = logging.getLogger("ids-graph-bridge")
 
+GRAPH_CACHE_VERSION = 1
+
+
+def graph_to_payload(graph: "nx.DiGraph") -> Dict[str, Any]:
+    """Convert a graph with JSON-serializable attributes into a plain dict."""
+    return {
+        "version": GRAPH_CACHE_VERSION,
+        "nodes": [{"id": node, "attrs": dict(attrs)} for node, attrs in graph.nodes(data=True)],
+        "edges": [
+            {"source": source, "target": target, "attrs": dict(attrs)}
+            for source, target, attrs in graph.edges(data=True)
+        ],
+    }
+
+
+def graph_from_payload(payload: Dict[str, Any]) -> "nx.DiGraph":
+    """Rebuild a graph from graph_to_payload output, rejecting unknown versions."""
+    if payload.get("version") != GRAPH_CACHE_VERSION:
+        raise ValueError("Unsupported graph cache version")
+    graph = nx.DiGraph()
+    for node in payload["nodes"]:
+        graph.add_node(node["id"], **node["attrs"])
+    for edge in payload["edges"]:
+        graph.add_edge(edge["source"], edge["target"], **edge["attrs"])
+    return graph
+
+
+def write_graph_json(graph: "nx.DiGraph", path: Path) -> None:
+    """Persist a graph as JSON via an atomic replace. Caches are never pickled."""
+    temp_path = path.with_name(path.name + ".tmp")
+    temp_path.write_text(json.dumps(graph_to_payload(graph)), encoding="utf-8")
+    temp_path.replace(path)
+
+
+def read_graph_json(path: Path) -> "nx.DiGraph":
+    return graph_from_payload(json.loads(path.read_text(encoding="utf-8")))
+
 class GraphBridge:
     """Advanced GraphRAG bridge for IDS documentation intelligence."""
     
     def __init__(self, root_path: Path, graph_cache_path: Optional[Path] = None):
         self.root_path = root_path
         ids_dir = Path(__file__).resolve().parent
-        self.cache_path = graph_cache_path or ids_dir / ".cache" / "ids_knowledge_graph.pkl"
+        self.cache_path = graph_cache_path or ids_dir / ".cache" / "ids_knowledge_graph.json"
         
         # Ensure parent directory for cache exists
         self.cache_path.parent.mkdir(parents=True, exist_ok=True)
@@ -45,8 +82,7 @@ class GraphBridge:
     def save_graph(self):
         """Persist the graph to disk."""
         try:
-            with open(self.cache_path, 'wb') as f:
-                pickle.dump(self.graph, f)
+            write_graph_json(self.graph, self.cache_path)
             logger.info(f"💾 Graph persisted to {self.cache_path}")
         except Exception as e:
             logger.error(f"Failed to save graph: {e}")
@@ -55,8 +91,7 @@ class GraphBridge:
         """Load the graph from disk if it exists."""
         if self.cache_path.exists():
             try:
-                with open(self.cache_path, 'rb') as f:
-                    self.graph = pickle.load(f)
+                self.graph = read_graph_json(self.cache_path)
                 logger.info(f"📂 Graph loaded from {self.cache_path}")
                 return True
             except Exception as e:
@@ -159,6 +194,9 @@ class GraphBridge:
 
     def trace_lineage(self, target_entity: str) -> List[str]:
         """Trace the 'DNA' of an entity (defining file -> classes -> functions)."""
+        if target_entity not in self.graph:
+            return []
+
         # This implementation traces the path from the root (system) down to the entity
         # In a real 'Digital DNA' system, this would also include historical metadata
         lineage = []

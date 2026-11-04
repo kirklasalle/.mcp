@@ -7,26 +7,35 @@
 **Category:** Documentation  
 **Status:** Active
 
-## 🧠 Revolutionary Documentation Intelligence with B1 Integration
+## AI-Enhanced Documentation Intelligence
 
 **Version:** 2.0.0-AI-Enhanced  
 **Date:** June 19, 2025  
-**Status:** 🚀 DEPLOYED AND OPERATIONAL  
-**Sacred Covenant Compliance:** ✅ ACTIVE  
+**Status:** Historical design document; see current implementation note below.
+
+> **Current implementation note:** This document contains historical design
+> claims. The current IDS MCP server exposes five tools: semantic search,
+> knowledge-graph query, conversational documentation, document analysis, and
+> lineage tracing. Neural Forge integration, live B1 training metrics, and
+> hardware telemetry are not implemented and are not advertised as tools.
+> Recommendations or example metrics below are illustrative, not measured
+> results.
 
 ---
 
 ## 🎯 Mission Statement
 
-The AI-Enhanced ImpressionCore Documentation System (IDS) represents a quantum leap in documentation intelligence, combining cutting-edge AI capabilities with B1 model integration to create the most advanced technical documentation system in the AI training ecosystem.
+The current IDS MCP server provides semantic search, knowledge-graph queries,
+conversational documentation, document analysis, and lineage tracing. This
+document also preserves historical design proposals; they are not claims of
+current implementation unless verified by the server catalog and tests.
 
 ### Core Objectives
 - **AI-Powered Semantic Search**: Natural language understanding of technical documentation
-- **B1 Optimization Engine**: Hardware-aware recommendations for GTX 1050 Ti optimization
+- **Optimization recommendations**: Heuristic suggestions, not hardware benchmarks
 - **Conversational Interface**: Natural dialogue with documentation content
 - **Knowledge Graph Intelligence**: Relationship mapping and insight generation
-- **Real-Time Hardware Analysis**: GTX 1050 Ti performance and thermal monitoring
-- **Neural Forge Integration**: Direct connection to B1 training pipeline
+- **Hardware telemetry**: Not provided by the current IDS MCP server
 
 ---
 
@@ -183,15 +192,11 @@ AI: "Based on your hardware, I recommend implementing gradient checkpointing
 - Missing documentation identification
 - Improvement recommendations
 
-### 7. **neural_forge_integration**
-**Purpose**: Interface with Neural Forge training system  
-**Intelligence Level**: 🔥🔥🔥🔥🔥 (Training Intelligence)
+### Neural Forge integration (historical; unavailable)
 
-**Integration Features:**
-- Real-time B1 training status
-- Hardware utilization monitoring
-- Optimization recommendation pipeline
-- Performance metrics tracking
+The former `neural_forge_integration` entry was removed because it returned
+simulated status and hardware metrics instead of querying a real training
+service. Do not rely on the earlier integration claims in this document.
 
 ---
 
@@ -334,10 +339,10 @@ pip install numpy pandas scikit-learn
 ```
 Failed to load knowledge graph: [error]
 ```
-**Solution**: Clear cache and rebuild:
+**Solution**: Clear cache and rebuild (the graph caches are JSON; any older `*.pkl` files are ignored and can be deleted):
 ```bash
-rm -rf .mcp/ids-mcp/ai_cache
-rm .mcp/ids-mcp/knowledge_graph.pkl
+rm -rf .mcp/ids/.cache/ai_cache
+rm -f .mcp/ids/.cache/knowledge_graph.json .mcp/ids/.cache/ids_knowledge_graph.json
 ```
 
 #### 3. **VRAM Out of Memory**
@@ -366,7 +371,7 @@ The AI-Enhanced IDS is specifically designed to support the B1 model's journey t
 
 1. **Optimization Recommendations**: Real-time suggestions for memory, training, and inference improvements
 2. **Hardware Monitoring**: Continuous GTX 1050 Ti performance tracking
-3. **Training Pipeline Integration**: Direct connection to Neural Forge system
+3. **Training Pipeline Integration**: Planned; no live Neural Forge connection
 4. **Quality Metrics**: Conversation quality scoring and improvement tracking
 
 ### B1 Optimization Categories
@@ -427,10 +432,13 @@ The AI-Enhanced IDS is specifically designed to support the B1 model's journey t
 
 ## 🎉 Conclusion
 
-The AI-Enhanced ImpressionCore IDS represents a revolutionary advancement in documentation intelligence, combining cutting-edge AI capabilities with practical hardware optimization for the GTX 1050 Ti. With B1 integration and conversational interfaces, it sets a new standard for technical documentation systems in the AI training ecosystem.
+The current IDS implementation provides documentation search, graph queries,
+conversation, analysis, and lineage operations. Hardware optimization and
+training integration claims in this historical document are not verified
+features of the current MCP server.
 
 **Status**: 🚀 **FULLY OPERATIONAL AND REVOLUTIONARY**  
-**Next Phase**: Integration with Neural Forge and B1 real-time training optimization  
+**Next Phase**: Implement and independently test any real training integration before advertising it.
 **Goal**: Support B1's journey to 10/10 conversation quality excellence  
 
 ---

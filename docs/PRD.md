@@ -14,13 +14,13 @@
 
 ## 1. Executive Summary & Vision
 
-The **`.mcp` Tooling Fleet** is an enterprise-grade suite of specialized micro-servers engineered to furnish modern AI agentic systems (Claude Desktop, Google Antigravity IDE, Cursor, Windsurf, and custom autonomous swarms) with high-reliability external context, multimodal knowledge curation, code intelligence, academic research, and system diagnostics.
+The **`.mcp` Tooling Fleet** is a collection of specialized micro-servers intended to furnish AI clients with external context, code intelligence, academic research, education curation, and system diagnostics. Operational maturity and implemented behavior are per-tool and must be verified; aspirational product requirements are not runtime guarantees.
 
 ### The Core Paradigm: "The Governance-Native MCP Fleet"
-While existing market competitors (Exa, Tavily, ContextForge, Docker MCP Gateway) treat tool governance as an operational afterthought (basic token authentication or network sandboxing), the `.mcp` fleet establishes **constitutional governance at the tool dispatch layer**. Every tool call is bound by Kirk LaSalle's **Agentic Sacred Covenant** and **Agentic Prime Directive**, ensuring that:
-1. **Destructive Actions Require Explicit Consent:** Tools that alter local files, delete data, or mutate system state require cryptographic approval tokens or client elicitation.
-2. **Transparent, Append-Only Ledger:** Every decision, query, and tool execution is logged to a tamper-evident audit ledger.
-3. **Zero Hallucinated Tools & Honest Error Semantics:** Servers strictly adhere to standard MCP error protocols (`isError: true` on failure), completely eliminating false-success loops.
+The fleet's governance goal is to make tool actions reviewable and bounded. Current implementation does not provide universal cryptographic enforcement; only scoped safeguards are implemented, including:
+1. **Destructive Actions Require Explicit Consent:** The current VRGC and DPA profiles require both `approved: true` and `MCP_ALLOW_MUTATIONS=1` for guarded operations. This is a local two-part check, not a cryptographic approval token or a substitute for client-side authorization.
+2. **Auditability:** Existing logs are operational diagnostics, not a universal append-only or tamper-evident audit ledger.
+3. **Honest Error Semantics:** Implemented adapters surface failures as MCP tool errors. Legacy tools and bridges still require per-tool behavioral testing.
 4. **Provider-Agnostic Deep Research:** Zero-cost out-of-the-box operation (DuckDuckGo, arXiv API, Library of Congress, Wikipedia) with plug-and-play expansion for commercial API backends.
 
 ---
@@ -71,18 +71,19 @@ The fleet supports three distinct operating topologies:
 
 ## 3. Server Inventory & Functional Specifications
 
-The monorepo encompasses 8 purpose-built micro-servers:
+The original monorepo contains 8 servers; the SpaceEntropyCompression integration adds the ninth `science_data` server:
 
 | Server | Directory | Protocol Role & Primary Capabilities | Canonical Entrypoint |
 | :--- | :--- | :--- | :--- |
 | **`goliath`** | `goliath/` | **Master Gateway & Swarm Memory**: Multiplexes child bridges, manages cross-server blackboard state, balances GPU VRAM budgets. | `goliath/server.py` |
 | **`ids`** | `ids/` | **Intelligent Documentation System**: Semantic code intelligence, GraphRAG knowledge graph construction (`GraphBridge`), AST parsing, documentation scoring. | `ids/server_ai_enhanced.py` |
-| **`eds`** | `eds/` | **Educational Data Scraper**: License-compliant academic crawling (MIT OCW, arXiv, Khan Academy, Wikipedia CC-BY-SA), multimodal video/pdf extraction. | `eds/server_enhanced.py` |
+| **`eds`** | `eds/` | **Educational Data Scraper**: Educational-source retrieval and multimodal assessment. License indicators are not rights determinations; training/redistribution requires item-level review. | `eds/server_enhanced.py` |
 | **`ipa`** | `ipa/` | **Intelligent Processing Assistant**: Advanced search operator harness (50+ operators), multi-step academic research synthesis, automated citation generation. | `ipa/server_ultimate.py` |
 | **`vrgc`** | `vrgc/` | **Virtually Robotic GitHub Copilot (SAPR)**: Autonomous system diagnostics, hardware profiling, self-healing code remediation, sandboxed candidate validation. | `vrgc/server_enhanced.py` |
 | **`dpa`** | `dpa/` | **Digital Project Assistant**: Natural language understanding (NLU), WCAG AA accessibility compliance verification, task scheduling, chronology tracking. | `dpa/server.py` |
 | **`web-search`**| `web-search/`| **High-Throughput Search Broker**: Resilient multi-engine web search with Google and DuckDuckGo fallback cascades, markdown webpage extraction. | `web-search/server.py` |
 | **`loc`** | `loc/` | **Library of Congress Research**: Real-time querying of the LoC catalog, Chronicling America historical newspapers, and congressional legislative archives. | `loc/server.py` |
+| **`science_data`** | `science_data/` | **SpaceEntropyCompression Science Data**: Bounded public NASA Exoplanet Archive TAP queries and INSPIRE-HEP literature metadata search; other sources are catalogued as planned until implemented. | `science_data/server.py` |
 
 ---
 
@@ -102,7 +103,7 @@ The monorepo encompasses 8 purpose-built micro-servers:
 
 ### 4.4 Project Agnosticism
 - **Requirement:** Micro-servers must operate in any arbitrary software repository without hardcoded host paths or brand-specific assumptions.
-- **Enforcement:** Workspace roots must be injected via `MCP_WORKSPACE_ROOT` or inferred from `cwd`.
+- **Enforcement:** Workspace roots are injected via `MCP_WORKSPACE_ROOT` or an explicit workspace-local default. An invalid configured root must fail rather than silently fall back to another checkout. from `cwd`.
 
 ---
 

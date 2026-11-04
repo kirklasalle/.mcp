@@ -89,9 +89,12 @@ local read-only calls and avoids external API calls, so it is suitable for CI.
 The unit suite and protocol-only probe were also run from a clean checkout in a
 virtual environment built only from `requirements.txt` and passed; the two
 workspace-profile checks in `test_project_config.py` skip there because they
-need the host project's `.vscode/mcp.json`. The GitHub Actions workflow
-([`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)) has not yet run
-remotely, and the Ubuntu leg has not been exercised locally.
+need the host project's `.vscode/mcp.json`. On 2026-11-04, the GitHub Actions
+workflow ([`../.github/workflows/ci.yml`](../.github/workflows/ci.yml)) passed
+all four Ubuntu/Windows and Python 3.11/3.12 jobs (run `41829273692`). Its
+first run exposed a Windows output-decoding failure in the fresh-start test
+harness; the harness now decodes subprocess output explicitly as UTF-8. Ubuntu
+has not been exercised locally.
 Bounded NASA Exoplanet Archive and INSPIRE-HEP queries previously returned
 three records with query provenance and SHA-256. These are startup/schema/
 smoke checks, not proof that every operation of every standalone server works.

@@ -6,36 +6,41 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  protocol-gate:
-    name: MCP Protocol Gate (2025-11-25)
+  contract-tests:
+    name: MCP contracts / ${{ matrix.os }} / Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-24.04, windows-2022]
         python-version: ["3.11", "3.12"]
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          cache: pip
+          cache-dependency-path: requirements.txt
 
-      - name: Install Dependencies
+      - name: Install MCP dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -e .
+          python -m pip install -r requirements.txt
 
-      - name: Generate Client Configurations
-        run: |
-          python scripts/configure_clients.py
+      - name: Run unit and configuration contracts
+        run: python -m unittest discover -s tests -p "test_*.py"
 
-      - name: Run MCP 8/8 Protocol Gate Probe
-        run: |
-          python tests/probe_v2.py
+      - name: Run stdio protocol and tool-schema gate without live API calls
+        run: python tests/probe_v2.py --protocol-only

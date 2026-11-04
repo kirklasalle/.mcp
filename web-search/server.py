@@ -29,6 +29,7 @@ CURRENT_DIR = Path(__file__).resolve().parent
 FLEET_ROOT = CURRENT_DIR.parent
 sys.path.insert(0, str(FLEET_ROOT))
 sys.path.insert(0, str(CURRENT_DIR))
+from shared.network_safety import validate_public_https_url
 
 try:
     from mcp.server import FastMCP
@@ -267,11 +268,12 @@ def fetch_webpage(url: str, extract_content: bool = True) -> str:
         })
     
     try:
+        validate_public_https_url(url)
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         }
         
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=10, allow_redirects=False)
         response.raise_for_status()
         
         if extract_content:
@@ -433,11 +435,12 @@ def bulk_url_fetch(urls: List[str], max_urls: int = 5) -> str:
         
         for url in urls:
             try:
+                validate_public_https_url(url)
                 headers = {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                 }
                 
-                response = requests.get(url, headers=headers, timeout=10)
+                response = requests.get(url, headers=headers, timeout=10, allow_redirects=False)
                 response.raise_for_status()
                 
                 content_data = extract_page_content(response.text, url)

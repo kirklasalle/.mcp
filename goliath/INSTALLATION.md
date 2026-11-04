@@ -66,7 +66,7 @@ All file-modifying operations are protected by:
 
 For issues or questions:
 1. Check the verification output: `python verify_goliath.py`
-2. Review server logs in `.goliath_logs/`
+2. Review server logs in `$MCP_CACHE_DIR/goliath_logs/` (default: `.mcp/.cache/goliath_logs/`)
 3. Ensure all dependencies are installed
 4. Verify Sacred Covenant protection status
 

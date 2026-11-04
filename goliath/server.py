@@ -55,14 +55,6 @@ from utils.tool_registry import GoliathToolRegistry
 from core.swarm_memory import SwarmMemory
 from core.load_balancer import VRAMLoadBalancer
 
-# Import bridge modules
-from bridges.ids_bridge import IDSBridge
-from bridges.dpa_bridge import DPABridge  
-from bridges.eds_bridge import EDSBridge
-from bridges.ipa_bridge import IPABridge
-from bridges.vrgc_bridge import VRGCBridge
-from bridges.websearch_bridge import WebSearchBridge
-
 # MCP imports - correct imports for MCP server
 try:
     from mcp.server import Server
@@ -220,19 +212,6 @@ class GoliathOrchestrationBridge:
                 name="goliath_get_swarm_state",
                 description="Get the current state of the swarm memory and hardware metrics",
                 inputSchema={"type": "object", "properties": {}}
-            ),
-            Tool(
-                name="goliath_synergize_memory",
-                description="Register a finding or context tag into the global swarm memory",
-                inputSchema={
-                    "type": "object",
-                    "properties": {
-                        "key": {"type": "string"},
-                        "value": {"type": "object"},
-                        "dna": {"type": "string"},
-                        "tags": {"type": "array", "items": {"type": "string"}}
-                    }
-                }
             )
         ]
 
@@ -243,24 +222,12 @@ class GoliathOrchestrationBridge:
                     "memory": self.memory.get_state(),
                     "hardware": self.balancer.get_metrics()
                 }
-            elif name == "goliath_synergize_memory":
-                key = arguments.get("key")
-                value = arguments.get("value")
-                dna = arguments.get("dna")
-                tags = arguments.get("tags")
-                
-                if key and value:
-                    self.memory.register_finding("goliath", key, value, dna)
-                if tags:
-                    self.memory.update_context(tags)
-                
-                return {"status": "success", "message": "Swarm memory synergized."}
             return {"error": f"Unknown orchestration tool: {name}"}
         except Exception as e:
             return {"error": str(e)}
 
 def initialize_goliath():
-    """Initialize all bridges and tools."""
+    """Initialize the verified read-only Goliath status surface."""
     global bridges, is_initialized
     
     if is_initialized:
@@ -269,20 +236,14 @@ def initialize_goliath():
     logger.info("[ROCKET] Goliath Unified Gateway MCP Server initializing...")
     
     try:
-        # Initialize all bridges
         bridge_configs = [
-            ("ids", IDSBridge, "Documentation System Management"),
-            ("dpa", DPABridge, "Digital Project Assistant"), 
-            ("eds", EDSBridge, "Educational Data Scraper"),
-            ("ipa", IPABridge, "Intelligent Processing Assistant"),
-            ("vrgc", VRGCBridge, "Virtually Robotic GitHub Copilot"),
-            ("websearch", WebSearchBridge, "Web Search & Content Extraction"),
-            ("goliath", lambda r, l, g: GoliathOrchestrationBridge(r, l, g, swarm_memory, load_balancer), "Unified Nerve Center Orchestration")
+            (
+                "goliath",
+                lambda r, l, g: GoliathOrchestrationBridge(r, l, g, swarm_memory, load_balancer),
+                "Read-only swarm and hardware status",
+            )
         ]
 
-        if HAS_CHRONOLOGY:
-            bridge_configs.append(("chronology", ChronologyBridge, "Unified Chronology Access"))
-        
         for bridge_name, bridge_class, description in bridge_configs:
             try:
                 bridge = bridge_class(PROJECT_ROOT, logger, covenant_guardian)
@@ -324,6 +285,7 @@ def initialize_goliath():
     except Exception as e:
         logger.error(f"[ERROR] Goliath initialization failed: {e}")
         logger.error(f"[ERROR] Traceback: {traceback.format_exc()}")
+        raise
 
 # Create MCP app if available
 if MCP_AVAILABLE:
@@ -372,8 +334,8 @@ if MCP_AVAILABLE:
             logger.error(f"[ERROR] Traceback: {traceback.format_exc()}")
             raise
 
-        # Bridges signal failure with an 'error' key — surface it as a real MCP error.
-        if isinstance(result, dict) and result.get("error") and len(result) <= 3:
+        # Never turn an error payload into a success-shaped MCP response.
+        if isinstance(result, dict) and result.get("error"):
             raise RuntimeError(_serialize(result))
 
         if isinstance(result, list) and result and hasattr(result[0], "type"):

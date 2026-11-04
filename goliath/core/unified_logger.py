@@ -54,8 +54,8 @@ class GoliathLogger:
             mcp_mode = "--test" not in sys.argv
         
         self.mcp_mode = mcp_mode
-        self.log_dir = log_dir or Path.cwd() / ".goliath_logs"
-        self.log_dir.mkdir(exist_ok=True)
+        self.log_dir = log_dir or self._default_log_dir()
+        self.log_dir.mkdir(parents=True, exist_ok=True)
         
         # Log files
         self.main_log = self.log_dir / "goliath.log"
@@ -72,7 +72,15 @@ class GoliathLogger:
         self._setup_logging()
         
         self.info("[ROCKET] Goliath Logger initialized")
-    
+
+    @staticmethod
+    def _default_log_dir() -> Path:
+        # MCP clients launch servers with the project workspace as cwd, so logs
+        # must not default there or they pollute the host repository.
+        cache_root = os.environ.get("MCP_CACHE_DIR")
+        base = Path(cache_root) if cache_root else Path(__file__).resolve().parents[2] / ".cache"
+        return base / "goliath_logs"
+
     def _setup_logging(self):
         """Setup comprehensive logging configuration."""
         # Create formatters

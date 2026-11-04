@@ -2,92 +2,109 @@
   {
     "server": "goliath",
     "script": "goliath/server.py",
-    "init_s": 1.68,
+    "mode": "smoke",
+    "init_s": 1.8,
     "protocol": "2025-11-25",
     "server_name": "goliath",
-    "tools": 50,
+    "tools": 1,
     "tool_names": [
-      "ids_search",
-      "ids_get_system_status",
-      "ids_list_tags",
-      "ids_get_file_info",
-      "ids_get_documentation_stats",
-      "ids_run_header_updater",
-      "ids_run_documentation_indexer",
-      "ids_run_system_validator",
-      "dpa_analyze",
-      "dpa_get_intent",
-      "dpa_get_entities",
-      "dpa_get_user_interface_config",
-      "dpa_apply_accessibility_to_response",
-      "dpa_get_accessibility_integration_status",
-      "dpa_process_accessibility_request",
-      "dpa_ids_search",
-      "dpa_ids_generate_docs",
-      "dpa_ids_status",
-      "dpa_ids_sync",
-      "dpa_ids_tag",
-      "dpa_ids_update",
-      "dpa_shutdown",
-      "eds_scrape_mit_ocw",
-      "eds_scrape_khan_academy",
-      "eds_scrape_wikipedia_educational",
-      "eds_scrape_arxiv_papers",
-      "eds_verify_license_compliance",
-      "eds_create_training_dataset",
-      "ipa_advanced_google_search",
-      "ipa_academic_research_search",
-      "ipa_technical_documentation_search",
-      "ipa_browse_url",
-      "ipa_search_analytics",
-      "ipa_list_google_operators",
-      "vrgc_assess_system",
-      "vrgc_monitor_training",
-      "vrgc_optimize_hardware",
-      "vrgc_verify_covenant",
-      "vrgc_analyze_intelligence",
-      "vrgc_start_b3_monitoring",
-      "vrgc_stop_b3_monitoring",
-      "vrgc_get_b3_status",
-      "vrgc_health_check",
-      "websearch_web_search",
-      "websearch_web_fetch_webpage",
-      "websearch_web_get_search_suggestions",
-      "websearch_web_search_with_filters",
-      "websearch_web_bulk_url_fetch",
-      "goliath_get_swarm_state",
-      "goliath_synergize_memory"
+      "goliath_get_swarm_state"
     ],
+    "tool_catalog_ok": true,
     "call": "goliath_get_swarm_state",
     "call_isError": false,
-    "call_excerpt": "{   \"memory\": {     \"active_context\": [],     \"finding_count\": 0,     \"dna_count\": 0,     \"last_updated\": \"2026-10-23T17:01:25.073237\"   },   \"hardware\": {     \"vram_usage_gb\": 0.5333175659179688,     \"target_limit_gb\": 4.0,     \"status\": \"",
+    "call_excerpt": "{   \"memory\": {     \"active_context\": [],     \"finding_count\": 0,     \"dna_count\": 0,     \"last_updated\": \"2026-11-03T20:09:04.600199\"   },   \"hardware\": {     \"vram_usage_gb\": null,     \"telemetry_available\": false,     \"telemetry_error\": ",
+    "positive_call_ok": true,
     "negative_isError": true,
+    "denied_calls": {
+      "goliath_synergize_memory": true,
+      "eds_scrape_mit_ocw": true
+    },
     "status": "OK",
-    "elapsed_s": 1.91
+    "tool_coverage": [
+      {
+        "tool": "goliath_get_swarm_state",
+        "status": "positive_smoke_passed"
+      }
+    ],
+    "elapsed_s": 1.95
   },
   {
     "server": "ids",
     "script": "ids/server_ai_enhanced.py",
-    "init_s": 8.06,
+    "mode": "smoke",
+    "init_s": 1.85,
     "protocol": "2025-11-25",
     "server_name": "ids",
-    "tools": 6,
+    "tools": 5,
     "tool_names": [
       "ai_semantic_search",
       "knowledge_graph_query",
       "conversational_documentation",
       "ai_document_analysis",
-      "neural_forge_integration",
       "ids_trace_lineage"
     ],
+    "tool_catalog_ok": true,
+    "call": "ai_semantic_search",
+    "call_isError": false,
+    "call_excerpt": "\ud83e\udde0 **AI-Enhanced Semantic Search Results**  **Query:** Candidate A astronomy data **Found 3 relevant documents**  ## 1. EMRF_Audit_and_Project_State_Report_2026-09-30.md **Path:** `D:\\Projects\\SpaceEntropyCompression\\docs\\EMRF_Audit_and_Proj",
+    "positive_call_ok": true,
+    "additional_calls": {
+      "knowledge_graph_query": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "\u274c Entity 'Candidate A' not found."
+      },
+      "conversational_documentation": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "\ud83d\udcac **ImpressionCore Documentation Assistant**  **Your Question:** Where are Candidate A test contracts documented?  **Based on the documentation, here's what I found:**  **From prob"
+      },
+      "ai_document_analysis": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "\ud83d\udccb **AI Documentation Analysis**  **Scope:** single_file **Target:** D:\\Projects\\SpaceEntropyCompression\\.mcp\\README.md  **Documentation Statistics:** - .MD files: 1 - .TXT files: 0"
+      },
+      "ids_trace_lineage": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "\u274c No lineage found for 'Candidate A'."
+      }
+    },
     "negative_isError": true,
+    "denied_calls": {
+      "neural_forge_integration": true
+    },
     "status": "OK",
-    "elapsed_s": 8.92
+    "tool_coverage": [
+      {
+        "tool": "ai_semantic_search",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "knowledge_graph_query",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "conversational_documentation",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "ai_document_analysis",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "ids_trace_lineage",
+        "status": "positive_smoke_passed"
+      }
+    ],
+    "elapsed_s": 18.27
   },
   {
     "server": "eds",
     "script": "eds/server_enhanced.py",
-    "init_s": 2.3,
+    "mode": "smoke",
+    "init_s": 1.98,
     "protocol": "2025-11-25",
     "server_name": "eds",
     "tools": 9,
@@ -102,14 +119,65 @@
       "create_comprehensive_training_dataset",
       "eds_multimodal_curate"
     ],
+    "tool_catalog_ok": true,
+    "call": "assess_content_quality_enhanced",
+    "call_isError": false,
+    "call_excerpt": "{   \"content_preview\": \"Candidate A requires a preregistered public-data test.\",   \"topic\": \"candidate testing\",   \"target_audience\": \"general\",   \"assessment_criteria\": [     \"accuracy\",     \"clarity\",     \"educational_value\"   ],   \"score",
+    "positive_call_ok": true,
+    "additional_calls": {
+      "verify_sacred_covenant_compliance": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"content_source\": \"public scientific metadata\",   \"license_info\": \"not established; review required\",   \"intended_use\": \"research\",   \"sacred_covenant_compliant\": false,   \"tra"
+      }
+    },
     "negative_isError": true,
     "status": "OK",
-    "elapsed_s": 2.51
+    "tool_coverage": [
+      {
+        "tool": "scrape_mit_ocw_enhanced",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "scrape_khan_academy_enhanced",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "scrape_wikipedia_enhanced",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "scrape_arxiv_enhanced",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "verify_sacred_covenant_compliance",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "assess_content_quality_enhanced",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "verify_enhanced_license_compliance",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "create_comprehensive_training_dataset",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "eds_multimodal_curate",
+        "status": "not_individually_exercised"
+      }
+    ],
+    "elapsed_s": 2.2
   },
   {
     "server": "ipa",
     "script": "ipa/server_ultimate.py",
-    "init_s": 2.12,
+    "mode": "smoke",
+    "init_s": 2.09,
     "protocol": "2025-11-25",
     "server_name": "ipa",
     "tools": 6,
@@ -121,58 +189,145 @@
       "ipa_research_history",
       "ipa_research_capabilities"
     ],
+    "tool_catalog_ok": true,
     "call": "ipa_research_capabilities",
     "call_isError": false,
     "call_excerpt": "{   \"server\": \"ipa\",   \"version\": \"3.0\",   \"research_methodologies\": [     \"deep_analysis\",     \"real_time\",     \"hybrid\",     \"conversational\",     \"systematic\",     \"investigative\",     \"competitive\",     \"synthesis_first\"   ],   \"search_",
+    "positive_call_ok": true,
+    "additional_calls": {
+      "ipa_research_history": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"research_sessions\": [],   \"total_sessions\": 0,   \"timestamp\": \"2026-11-04T01:09:27.434144+00:00\" }"
+      }
+    },
     "negative_isError": true,
     "status": "OK",
-    "elapsed_s": 2.36
+    "tool_coverage": [
+      {
+        "tool": "ipa_ultimate_research",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ipa_conversational_search",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ipa_deep_research",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ipa_multi_engine_search",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ipa_research_history",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "ipa_research_capabilities",
+        "status": "positive_smoke_passed"
+      }
+    ],
+    "elapsed_s": 2.42
   },
   {
     "server": "vrgc",
     "script": "vrgc/server_enhanced.py",
-    "init_s": 11.92,
+    "mode": "smoke",
+    "init_s": 2.45,
     "protocol": "2025-11-25",
     "server_name": "vrgc",
-    "tools": 28,
+    "tools": 10,
     "tool_names": [
-      "vrgc_design_neural_architecture",
-      "vrgc_analyze_model_complexity",
-      "vrgc_optimize_layer_design",
-      "vrgc_validate_architecture",
-      "vrgc_generate_architecture_blueprint",
-      "vrgc_optimize_training_pipeline",
-      "vrgc_monitor_training_health",
-      "vrgc_prepare_deployment",
-      "vrgc_optimize_embeddings",
-      "vrgc_hardware_profiling",
       "vrgc_self_heal_code",
-      "vrgc_sandbox_execute",
-      "vrgc_war_game_refactor",
       "vrgc_web_fetch",
       "vrgc_web_search",
       "vrgc_download_file",
       "vrgc_ftp_access",
       "vrgc_api_request",
-      "vrgc_web_monitor",
-      "vrgc_web_scrape",
-      "vrgc_research_assistant",
-      "vrgc_web_security_scan",
-      "vrgc_web_performance_test",
       "vrgc_assess_system",
       "vrgc_monitor_training",
       "vrgc_optimize_hardware",
-      "vrgc_verify_covenant",
-      "vrgc_analyze_intelligence"
+      "vrgc_verify_covenant"
     ],
+    "tool_catalog_ok": true,
+    "call": "vrgc_assess_system",
+    "call_isError": false,
+    "call_excerpt": "{   \"vrgc_assessment\": {     \"version\": \"1.0.0\",     \"timestamp\": \"2026-11-03T20:09:28.982171\",     \"assessment_duration\": 1.174513,     \"standalone_mode\": false   },   \"hardware\": {     \"assessment_type\": \"hardware_capabilities\",     \"time",
+    "positive_call_ok": true,
+    "additional_calls": {
+      "vrgc_monitor_training": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"monitoring_type\": \"active_training\",   \"timestamp\": \"2026-11-03T20:09:28.982171\",   \"active_processes\": [],   \"gpu_utilization\": 0.0,   \"memory_usage\": {},   \"training_detecte"
+      },
+      "vrgc_optimize_hardware": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"timestamp\": \"2026-11-03T20:09:39.052018\",   \"gpu_metrics\": {     \"status\": \"unavailable\",     \"reason\": \"optional_dependency_missing\",     \"dependency\": \"GPUtil\"   },   \"syste"
+      },
+      "vrgc_verify_covenant": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"timestamp\": \"2026-11-03T20:09:39.054002\",   \"files_checked\": 5,   \"files_healthy\": 5,   \"files_at_risk\": 0,   \"critical_issues\": [],   \"warnings\": [],   \"file_details\": {     "
+      }
+    },
     "negative_isError": true,
+    "denied_calls": {
+      "vrgc_download_file": true,
+      "vrgc_ftp_access": true
+    },
     "status": "OK",
-    "elapsed_s": 12.52
+    "tool_coverage": [
+      {
+        "tool": "vrgc_self_heal_code",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "vrgc_web_fetch",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "vrgc_web_search",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "vrgc_download_file",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "vrgc_ftp_access",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "vrgc_api_request",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "vrgc_assess_system",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "vrgc_monitor_training",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "vrgc_optimize_hardware",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "vrgc_verify_covenant",
+        "status": "positive_smoke_passed"
+      }
+    ],
+    "elapsed_s": 11.57
   },
   {
     "server": "dpa",
     "script": "dpa/server.py",
-    "init_s": 4.43,
+    "mode": "smoke",
+    "init_s": 1.7,
     "protocol": "2025-11-25",
     "server_name": "dpa",
     "tools": 17,
@@ -195,17 +350,113 @@
       "dpa_chronology_delta",
       "dpa_chronology_stats"
     ],
+    "tool_catalog_ok": true,
     "call": "get_intent",
     "call_isError": false,
-    "call_excerpt": "{   \"text\": \"remind me to call mom tomorrow\",   \"intent\": \"unknown\" }",
+    "call_excerpt": "{   \"text\": \"analyze candidate astronomy test gate\",   \"intent\": \"unknown\" }",
+    "positive_call_ok": true,
+    "additional_calls": {
+      "analyze": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"text\": \"Assess the current Candidate A evidence gate.\",   \"intent\": {     \"intent_type\": \"unknown\",     \"confidence\": 0.0,     \"supporting_features\": [],     \"metadata\": {}   "
+      },
+      "get_entities": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"text\": \"Candidate A data test in November 2026\",   \"entities\": [] }"
+      },
+      "get_accessibility_integration_status": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"initialized\": true,   \"components\": {     \"accessibility_manager\": true,     \"ux_manager\": true,     \"query_processor\": true,     \"nlu_engine\": true   } }"
+      }
+    },
     "negative_isError": true,
+    "denied_calls": {
+      "ids_update": true,
+      "ids_tag": true,
+      "ids_sync": true,
+      "ids_generate_docs": true
+    },
     "status": "OK",
-    "elapsed_s": 5.04
+    "tool_coverage": [
+      {
+        "tool": "analyze",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "get_intent",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "get_entities",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "ids_update",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ids_tag",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ids_sync",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ids_status",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ids_search",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "ids_generate_docs",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "shutdown",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "process_accessibility_request",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "get_user_interface_config",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "apply_accessibility_to_response",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "get_accessibility_integration_status",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "dpa_chronology_snapshot",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "dpa_chronology_delta",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "dpa_chronology_stats",
+        "status": "not_individually_exercised"
+      }
+    ],
+    "elapsed_s": 1.96
   },
   {
     "server": "web-search",
     "script": "web-search/server.py",
-    "init_s": 1.79,
+    "mode": "smoke",
+    "init_s": 1.58,
     "protocol": "2025-11-25",
     "server_name": "Web Search MCP Server",
     "tools": 8,
@@ -219,17 +470,61 @@
       "chronology_delta",
       "chronology_stats"
     ],
+    "tool_catalog_ok": true,
     "call": "get_search_suggestions",
     "call_isError": false,
     "call_excerpt": "{   \"original_query\": \"mcp\",   \"suggestions\": [     \"\\\"mcp\\\"\",     \"mcp tutorial\",     \"mcp guide\",     \"mcp examples\"   ],   \"operators\": [],   \"tips\": [     \"Consider adding more specific terms to narrow results\"   ] }",
+    "positive_call_ok": true,
+    "additional_calls": {
+      "get_search_suggestions": {
+        "ok": true,
+        "isError": false,
+        "excerpt": "{   \"original_query\": \"physics Candidate A public data research\",   \"suggestions\": [     \"\\\"physics Candidate A public data research\\\"\",     \"physics Candidate A public data resear"
+      }
+    },
     "negative_isError": true,
     "status": "OK",
-    "elapsed_s": 2.0
+    "tool_coverage": [
+      {
+        "tool": "web_search",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "fetch_webpage",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "search_with_filters",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "get_search_suggestions",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "bulk_url_fetch",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "chronology_snapshot",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "chronology_delta",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "chronology_stats",
+        "status": "not_individually_exercised"
+      }
+    ],
+    "elapsed_s": 1.77
   },
   {
     "server": "loc",
     "script": "loc/server.py",
-    "init_s": 1.58,
+    "mode": "smoke",
+    "init_s": 1.44,
     "protocol": "2025-11-25",
     "server_name": "loc",
     "tools": 4,
@@ -239,8 +534,67 @@
       "loc_get_item_metadata",
       "loc_search_legislation"
     ],
+    "tool_catalog_ok": true,
+    "call": "loc_search_catalog",
+    "call_isError": false,
+    "call_excerpt": "{   \"query\": \"astronomy\",   \"collection\": \"all\",   \"total_available\": 138757,   \"returned_count\": 1,   \"results\": [     {       \"title\": \"Astronomy\",       \"date\": \"1896-01-01\",       \"url\": \"https://www.loc.gov/item/2004662283/\",       \"fo",
+    "positive_call_ok": true,
     "negative_isError": true,
     "status": "OK",
+    "tool_coverage": [
+      {
+        "tool": "loc_search_catalog",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "loc_search_newspapers",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "loc_get_item_metadata",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "loc_search_legislation",
+        "status": "not_individually_exercised"
+      }
+    ],
+    "elapsed_s": 2.11
+  },
+  {
+    "server": "science-data",
+    "script": "science_data/server.py",
+    "mode": "smoke",
+    "init_s": 1.6,
+    "protocol": "2025-11-25",
+    "server_name": "spaceentropy-science-data",
+    "tools": 3,
+    "tool_names": [
+      "science_data_list_sources",
+      "science_data_query_exoplanets",
+      "science_data_search_inspire"
+    ],
+    "tool_catalog_ok": true,
+    "call": "science_data_list_sources",
+    "call_isError": false,
+    "call_excerpt": "{   \"domains\": {     \"astronomy\": [       {         \"id\": \"nasa-exoplanet-archive\",         \"name\": \"NASA Exoplanet Archive\",         \"url\": \"https://exoplanetarchive.ipac.caltech.edu/\",         \"api\": \"https://exoplanetarchive.ipac.caltech",
+    "positive_call_ok": true,
+    "negative_isError": true,
+    "status": "OK",
+    "tool_coverage": [
+      {
+        "tool": "science_data_list_sources",
+        "status": "positive_smoke_passed"
+      },
+      {
+        "tool": "science_data_query_exoplanets",
+        "status": "not_individually_exercised"
+      },
+      {
+        "tool": "science_data_search_inspire",
+        "status": "not_individually_exercised"
+      }
+    ],
     "elapsed_s": 1.75
   }
 ]

@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+- **`science_data` server**: bounded, read-only NASA Exoplanet Archive (fixed TAP table, allowlisted columns) and INSPIRE-HEP literature adapters. Each result carries the source URL, query, UTC retrieval time, response SHA-256 and an evidence-class label; arbitrary URLs are rejected and nothing is written to disk.
+- **`shared/workspace.py` and `shared/network_safety.py`**: explicit workspace-root resolution via `MCP_WORKSPACE_ROOT` (startup fails on a missing or invalid root) and helpers for bounded outbound requests.
+- **Mutation gate**: one shared check (`shared/mutation_gate.py`) now guards VRGC `vrgc_download_file`, `vrgc_ftp_access`, `vrgc_sandbox_execute`, `vrgc_war_game_refactor` (the last two are unimplemented and not listed) and `vrgc_api_request` with a method other than GET/HEAD/OPTIONS, plus DPA `ids_update`, `ids_tag`, `ids_sync` and `ids_generate_docs`. These calls are denied unless `MCP_ALLOW_MUTATIONS=1` is set and the call passes `approved=true` (the literal boolean; `"true"` or `1` is rejected).
+- **Verification**: 43 unit/configuration tests, per-tool coverage reporting in `tests/probe_v2.py`, a `--protocol-only` probe mode that makes no upstream calls, and a CI workflow (Ubuntu and Windows, Python 3.11 and 3.12) using SHA-pinned actions. The latest bounded smoke probe passed 9/9 server targets and individually exercised 21 of 63 listed tools; the remaining 42 are marked `not_individually_exercised`. Denied-call checks (including the four DPA mutation tools) are recorded separately and do not count toward that figure. The unit suite and the protocol-only probe also pass from a clean checkout in a virtual environment built only from `requirements.txt`; the two profile checks in `test_project_config.py` are skipped there because they need the host workspace's `.vscode/mcp.json`. The workflow has not yet run on GitHub Actions.
+- **`docs/SPACE_ENTROPY_COMPRESSION.md`**: project integration guide with verification scope and limitations.
+
+### Changed
+- **Goliath** exposes only the tested read-only `goliath_get_swarm_state`; unverified bridge routes are not registered and unavailable GPU telemetry is reported as unknown rather than simulated. Logs now default to `MCP_CACHE_DIR/goliath_logs` (previously `.goliath_logs/` in the working directory, which polluted the host project).
+- **IDS**: `ai_document_analysis` honors `single_file` scope, `ids_trace_lineage` returns an empty result for unknown entities, and `server_ai_enhanced.py` (workspace-root aware) is the supported entry point. Knowledge-graph caches (`ids/.cache/knowledge_graph.json` and `ids_knowledge_graph.json`) are now versioned JSON written atomically; they were pickles, which run arbitrary code when a tampered cache is loaded. Existing `*.pkl` caches are never read and the graphs are rebuilt.
+- **VRGC**: `vrgc_verify_covenant` is a read-only integrity check; it previously called file-protection routines that created backups and changed permissions.
+- **Startup resilience**: DPA starts without PyTorch and VRGC without GPUtil; LoC upstream failures now raise tool errors (`loc_*_upstream_failure`). DPA's accessibility status route uses the `AccessibilityIntegration` wrapper.
+- **DPA IDS bridge**: disabled unless `DPA_IDS_API_PATH` names an absolute path to an existing script. It previously derived `<repo root>/src/core/utils/ids_server_api.py` from its own location, which with `.mcp` as a submodule is the host repository, so any script appearing at that path would have been executed; a missing script was also reported as a successful result. Failures are now error results (`ids_bridge_disabled`, `ids_bridge_script_invalid`, `ids_bridge_command_failed`, `ids_bridge_error`), the child runs with a 60-second timeout, and its stdin is detached from the MCP protocol stream (on Windows an inherited stdin pipe stalled the child until the timeout).
+- **Client configuration**: `mcp-settings.json` uses workspace-relative `py -3.12` launches instead of machine-specific absolute paths; `antigravity_mcp_config.json`, `claude_desktop_config.json` and `nexus-mcp-settings.json` no longer ship stale server entries.
+- **Documentation**: historical capability and verification claims in the README, IDS and VRGC guides are marked unverified.
+
+### Removed
+- IDS `neural_forge_integration`, which returned hard-coded mock training and GPU figures (default model `impressioncore-b1`) rather than real telemetry.
+- VRGC tools without a real implementation are no longer listed (`UNIMPLEMENTED_TOOL_NAMES` in `vrgc/server_enhanced.py`).
+
+### Fixed
+- **IDS startup crash on a fresh checkout**: `server_ai_enhanced.py` raised `NameError: name 'nx' is not defined` when no graph cache existed and `numpy` was not installed, because `networkx` was imported inside the optional AI-library guard. A leftover `knowledge_graph.pkl` hid it wherever the server had already run. `networkx` is now imported unconditionally (it is a hard dependency of `graph_bridge`), and `tests/test_ids_fresh_start.py` starts the server with an empty cache and `numpy` blocked.
+- **Probe exit status**: `tests/probe_v2.py` always exited 0, so the CI probe step could not fail. It now exits 1 unless every probed server reports OK (`gate_exit_code`). Its IDS single-file analysis targets this repository's `README.md` instead of the host project's `STATUS.md`, so the probe is valid in a standalone checkout.
+
+---
+
 ## [2.0.0] - 2026-10-23
 
 ### Comprehensive Fleet Audit & Phase 0 Stabilization Release

@@ -20,10 +20,16 @@ import os
 import json
 import time
 import psutil
-import GPUtil
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple, Any
 from pathlib import Path
+
+try:
+    import GPUtil
+    GPU_UTIL_AVAILABLE = True
+except ImportError:
+    GPUtil = None
+    GPU_UTIL_AVAILABLE = False
 
 # Add project root to path for imports
 project_root = Path(__file__).parent.parent.parent.parent
@@ -234,6 +240,12 @@ class HardwareOptimizer:
     
     def _get_gpu_metrics(self) -> Dict[str, Any]:
         """Get current GPU metrics."""
+        if not GPU_UTIL_AVAILABLE:
+            return {
+                "status": "unavailable",
+                "reason": "optional_dependency_missing",
+                "dependency": "GPUtil",
+            }
         try:
             gpus = GPUtil.getGPUs()
             if not gpus:

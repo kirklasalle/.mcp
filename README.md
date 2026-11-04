@@ -29,32 +29,32 @@ Comprehensive technical, product, and operational guides are provided across the
 
 ## 🏛️ Architecture Overview
 
-The `.mcp` monorepo houses **8 specialized, project-agnostic enterprise micro-servers** engineered for agentic reasoning, persistent memory, cognitive graphs, web intelligence, and robotic software engineering:
+The original `.mcp` pack contains **7 standalone specialist servers and the optional Goliath orchestrator**. SpaceEntropyCompression adds an eighth standalone `science_data` adapter for bounded public astronomy and HEP metadata queries.
 
 ![Advanced AI Agent Platform Architecture](assets/images/architecture_overview.jpg)
 
 ### Micro-Server Inventory
 
-1. **`goliath`** — **Unified Gateway & Swarm Memory Hub**:
-   - Master multiplexer aggregating all 7 child servers into a single endpoint (50+ registered tools).
-   - Distributed episodic blackboard with persistent swarm memory (`goliath_swarm_memory.json`).
-   - Dynamic VRAM budget coordination and active hardware telemetry.
+1. **`goliath`** — **Read-only Swarm Status Gateway**:
+   - Currently exposes only the tested `goliath_get_swarm_state` operation.
+   - Legacy child-server bridge routes are intentionally not registered: some were mocks and the rest lack end-to-end route-parity tests.
+   - Swarm memory writes remain disabled through this gateway; use standalone servers for supported operations.
 
 2. **`ids`** — **Intelligent Documentation System**:
    - Semantic code intelligence, GraphRAG knowledge graph construction (`GraphBridge`), and AST parsing.
    - Automatic entity-relationship extraction, lineage tracking, and documentation scoring.
 
 3. **`eds`** — **Educational Data Scraper & Multi-Modal Curator**:
-   - License-compliant educational dataset extraction (MIT OpenCourseWare, arXiv, Wikipedia CC-BY-SA, government portals).
-   - Multi-modal quality assessment, deduplication, and ethical rate-limiting.
+   - Educational-source retrieval and multimodal assessment; item-level license and training rights require independent review.
+   - License text detection is a hint only and never certifies training or redistribution permission.
 
 4. **`ipa`** — **Intelligent Processing Assistant**:
    - Advanced search engine harness with 50+ specialized query operators.
    - Live arXiv academic preprint retrieval, multi-step research synthesis, and citation formatting.
 
 5. **`vrgc`** — **Virtually Robotic GitHub Copilot**:
-   - Software Application Programming Robot (SAPR) intelligence edition.
-   - Autonomous system diagnostics, hardware optimization, self-healing code repair, and sandbox verification.
+   - Project diagnostics and hardware observation with mutation-gated download, FTP, and API operations.
+   - Unimplemented architecture, research, and sandbox tools are not advertised as working.
 
 6. **`dpa`** — **Digital Project Assistant**:
    - Natural language understanding (NLU) engine, accessibility compliance engine (WCAG AA), and task orchestration.
@@ -69,9 +69,25 @@ The `.mcp` monorepo houses **8 specialized, project-agnostic enterprise micro-se
 
 ---
 
-## 🧪 Live Protocol Verification Matrix (Audit Standard)
+### SpaceEntropyCompression science-data adapter
 
-All servers are verified via the automated protocol probe (`probe_v2.py`) executing over standard stdio using the official MCP Python SDK:
+`science_data` is a project-specific standalone service that:
+   - Provides bounded read-only NASA Exoplanet Archive and INSPIRE-HEP metadata queries with source URL, query, retrieval timestamp, checksum, and evidence-class labels.
+   - Catalogues other potential observatories and archives as unimplemented until their API and access terms are reviewed.
+
+## SpaceEntropyCompression integration status
+
+The project workspace uses `.vscode/mcp.json` and workspace-relative server
+paths. It starts the standalone servers and Goliath's read-only status surface.
+Goliath's child-server bridge routes are not registered; use standalone
+services for their capabilities until real dispatch and parity tests exist.
+Use [`docs/SPACE_ENTROPY_COMPRESSION.md`](docs/SPACE_ENTROPY_COMPRESSION.md)
+for workspace setup, implemented data coverage, permissions, and evidence
+limitations.
+
+## 🧪 Recorded Protocol Probe Snapshot (Historical; Not Certification)
+
+The table below is a historical recorded probe snapshot, not current release certification. Its negative-call gate verifies error semantics, but it does not prove that every listed tool works. Recorded positive calls cover Goliath, IPA, DPA, and web-search; IDS, EDS, VRGC, and LoC were only initialized and listed. The new `science_data` server was not part of that probe.
 
 | Server | Entrypoint | Protocol | Tools | Live Execution Status | Protocol Gate |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -84,13 +100,36 @@ All servers are verified via the automated protocol probe (`probe_v2.py`) execut
 | **`web-search`**| `web-search/server.py` | `2025-11-25` | 8 | ✅ `get_search_suggestions` OK | **PASSED (OK)** |
 | **`loc`** | `loc/server.py` | `2025-11-25` | 4 | ✅ Catalog / archives query ready | **PASSED (OK)** |
 
-*Status: **8/8 Gate Passed**. Handshake, listing, positive execution, and negative error flagging (`isError: true`) are operational.*
+*Historical status: **8/8 protocol/listing/negative-call gates passed**. Positive tool execution was not covered for every server, and tool counts are not evidence of functional behavior.*
+
+## Current project-local verification
+
+The latest full smoke run passed **9/9 server targets** and individually
+exercised **21/63 listed tools**; 42 listed tools remain unverified by an
+individual positive call. It validates tool schemas, successful configured
+calls, unknown-tool errors, explicit per-tool coverage, and hidden-route
+denials. Error-shaped JSON payloads count as failures. Results are recorded in
+[`tests/probe_v2_results.json`](tests/probe_v2_results.json). This is a bounded
+smoke test, not certification of every advertised operation.
+The offline CI gate also runs the unit/configuration tests and
+`python tests/probe_v2.py --protocol-only`; it uses curated local read-only
+calls and makes no upstream science/archive calls.
+Bounded live NASA Exoplanet Archive and INSPIRE-HEP queries each returned three
+records with provenance and response hashes; see
+[`docs/SPACE_ENTROPY_COMPRESSION.md`](docs/SPACE_ENTROPY_COMPRESSION.md) for
+scope and limitations.
 
 ---
 
-## 🖨️ Master Calibration & Fleet Self-Test Demo ("The Printer Self-Test")
+## 🖨️ Historical Calibration Example (Not a Release Gate)
 
-For evaluators, users, and public release verification, you can run an automated, hardware-style self-test across all 8 micro-servers simultaneously. Much like an enterprise printer executing an alignment cycle and printing an authoritative diagnostic test sheet, copy and paste this **Master Prompt** into your AI client (Claude Desktop, Antigravity IDE, Cursor):
+Do not treat this example's completion message as functional or scientific
+certification. Several named bridge implementations were placeholders and now
+fail explicitly instead of returning mock results.
+
+The following archived prompt describes an earlier eight-server setup. Review
+each tool's current implementation and permissions before adapting it; it does
+not certify the current fleet or scientific conclusions.
 
 ### 📋 The Master Calibration Prompt (Copy & Paste)
 
@@ -140,16 +179,18 @@ Print a complete, formatted "MCP FLEET CALIBRATION CERTIFICATE & DIAGNOSTIC SHEE
 
 ---
 
-## ⚙️ 1-Click Client Configurations
+## ⚙️ Project-local Client Configuration
 
-Pre-configured, UTF-8 validated configuration files are provided in the repository root for instant integration:
+The active project profile is maintained in
+[`../.vscode/mcp.json`](../.vscode/mcp.json) and uses workspace-relative paths
+to this local submodule. Legacy Claude Desktop, Antigravity, and Nexus configs
+are intentionally empty: their previous machine-specific paths pointed
+outside this project and must not be used. Do not copy external `.mcp` paths
+into a project configuration.
 
 | Client Environment | Configuration File | Installation Target |
 | :--- | :--- | :--- |
-| **Google Antigravity IDE** | [`antigravity_mcp_config.json`](antigravity_mcp_config.json) | Workspace MCP settings or `%USERPROFILE%\.gemini\antigravity-ide\mcp\` |
-| **Anthropic Claude Desktop** | [`claude_desktop_config.json`](claude_desktop_config.json) | `%APPDATA%\Claude\claude_desktop_config.json` |
-| **Cursor / Windsurf** | [`mcp-settings.json`](mcp-settings.json) | `.cursor/mcp.json` or `.windsurf/mcp.json` |
-| **Nexus Unified Orchestrator** | [`nexus-mcp-settings.json`](nexus-mcp-settings.json) | Nexus root configuration |
+| **VS Code / Copilot** | [`../.vscode/mcp.json`](../.vscode/mcp.json) | Current SpaceEntropyCompression workspace |
 
 ---
 

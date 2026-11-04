@@ -229,6 +229,7 @@ class AccessibilityIntegration:
             nlu_engine=nlu_engine,
             user_id=kwargs.get("user_id")
         )
+        self.integration_manager = self._manager
 
     def initialize(self):  # no-op for compatibility
         return True

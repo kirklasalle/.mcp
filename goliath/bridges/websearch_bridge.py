@@ -119,52 +119,13 @@ class WebSearchBridge:
         
         return tools
     
-    def execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> List[TextContent]:
-        """Execute a WebSearch tool."""
-        internal_tool_name = tool_name.replace("web_", "")
-        
-        # Mock web search responses
-        if internal_tool_name == "search":
-            result = {
-                "query": arguments.get("query", ""),
-                "results": [
-                    {
-                        "title": f"Search Result for {arguments.get('query', '')}",
-                        "url": "https://example.com/result1",
-                        "snippet": "This is a mock search result from the web search bridge.",
-                        "source": "WebSearch Bridge"
-                    }
-                ],
-                "total_results": arguments.get("num_results", 10),
-                "search_engine": "Google" if arguments.get("use_google", True) else "DuckDuckGo"
-            }
-        elif internal_tool_name == "fetch_webpage":
-            result = {
-                "url": arguments.get("url", ""),
-                "title": "Example Webpage",
-                "content": "Mock webpage content extracted by WebSearch Bridge",
-                "status_code": 200,
-                "content_type": "text/html"
-            }
-        elif internal_tool_name == "get_search_suggestions":
-            result = {
-                "original_query": arguments.get("query", ""),
-                "suggestions": [
-                    f"{arguments.get('query', '')} tutorial",
-                    f"{arguments.get('query', '')} documentation",
-                    f"{arguments.get('query', '')} examples"
-                ],
-                "optimization_tips": ["Use specific keywords", "Add site: operator for targeted search"]
-            }
-        else:
-            result = {
-                "operation": internal_tool_name,
-                "status": "completed",
-                "data": f"Web search operation completed for {arguments}",
-                "source": "WebSearch Bridge"
-            }
-        
-        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    def execute_tool(self, tool_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """Report that this placeholder bridge has no real web-search dispatch."""
+        return {
+            "error": "bridge_not_implemented",
+            "bridge": self.bridge_name,
+            "tool": tool_name,
+        }
     
     def get_bridge_info(self) -> Dict[str, Any]:
         """Get bridge information."""

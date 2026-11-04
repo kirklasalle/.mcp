@@ -1,100 +1,84 @@
 {
   "mcpServers": {
-    "goliath": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\goliath\\server.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\goliath",
-      "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "GOLIATH_DEBUG": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\goliath;D:\\Projects\\.mcp"
-      }
-    },
     "ids": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\ids\\server_ai_enhanced.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\ids",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\ids\\server_ai_enhanced.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\ids;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
       }
     },
     "eds": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\eds\\server_enhanced.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\eds",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\eds\\server_enhanced.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\eds;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
       }
     },
     "ipa": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\ipa\\server_ultimate.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\ipa",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\ipa\\server_ultimate.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\ipa;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
       }
     },
     "vrgc": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\vrgc\\server_enhanced.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\vrgc",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\vrgc\\server_enhanced.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\vrgc;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache",
+        "MCP_ALLOW_MUTATIONS": "0"
       }
     },
     "dpa": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\dpa\\server.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\dpa",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\dpa\\server.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\dpa;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
       }
     },
     "web-search": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\web-search\\server.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\web-search",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\web-search\\server.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\web-search;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
       }
     },
     "loc": {
-      "command": "G:\\Program Files\\Python314\\python.exe",
-      "args": [
-        "D:\\Projects\\.mcp\\loc\\server.py"
-      ],
-      "cwd": "D:\\Projects\\.mcp\\loc",
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\loc\\server.py"],
+      "cwd": "${workspaceFolder}\\..",
       "env": {
-        "PYTHONIOENCODING": "utf-8",
-        "PYTHONUTF8": "1",
-        "PYTHONPATH": "D:\\Projects\\.mcp\\loc;D:\\Projects\\.mcp"
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
+      }
+    },
+    "science-data": {
+      "command": "py",
+      "args": ["-3.12", "${workspaceFolder}\\science_data\\server.py"],
+      "cwd": "${workspaceFolder}\\..",
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "MCP_WORKSPACE_ROOT": "${workspaceFolder}\\..",
+        "MCP_CACHE_DIR": "${workspaceFolder}\\.cache"
       }
     }
   }

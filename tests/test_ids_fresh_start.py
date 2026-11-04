@@ -29,6 +29,8 @@ class IdsFreshStartTests(unittest.TestCase):
                 stdin=subprocess.DEVNULL,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=120,
                 env={**os.environ, "PYTHONUTF8": "1", "MCP_WORKSPACE_ROOT": temp_dir},
             )

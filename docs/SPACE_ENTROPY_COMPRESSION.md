@@ -67,13 +67,17 @@ are catalogued as planned, not represented as working adapters.
 
 ## Verification
 
-From the SpaceEntropyCompression repository root, run the focused unit suite
-and protocol probe with:
+From the SpaceEntropyCompression repository root, with Python 3.11 or 3.12
+available as `python`, run the focused unit suite and protocol probe with:
 
-```powershell
-py -3.12 -m unittest discover -s .mcp\tests -p "test_*.py"
-py -3.12 .mcp\tests\probe_v2.py
+```sh
+python -m unittest discover -s .mcp/tests -p "test_*.py"
+python .mcp/tests/probe_v2.py
 ```
+
+The shared VS Code profile uses this same `python` command and forward-slash
+workspace-relative script/cache paths, so the path syntax works on Windows and
+POSIX. The interpreter selected by `PATH` must be a tested Python version.
 
 The latest verification passed 43 focused unit tests and the full bounded
 smoke probe passed all nine configured MCP targets. The probe exits non-zero

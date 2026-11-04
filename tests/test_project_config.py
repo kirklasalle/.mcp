@@ -28,16 +28,18 @@ class ProjectMcpConfigurationTests(unittest.TestCase):
 
         for name, server in servers.items():
             with self.subTest(server=name):
-                self.assertEqual(server["command"], "py")
+                self.assertEqual(server["command"], "python")
                 self.assertEqual(server["cwd"], "${workspaceFolder}")
-                self.assertEqual(server["args"][0], "-3.12")
-                self.assertTrue(server["args"][1].startswith("${workspaceFolder}\\.mcp\\"))
-                entrypoint = PROJECT_ROOT / server["args"][1].removeprefix("${workspaceFolder}\\")
+                self.assertEqual(len(server["args"]), 1)
+                script = server["args"][0]
+                self.assertTrue(script.startswith("${workspaceFolder}/.mcp/"))
+                self.assertNotIn("\\", script)
+                entrypoint = PROJECT_ROOT / script.removeprefix("${workspaceFolder}/")
                 self.assertTrue(entrypoint.is_file())
                 self.assertIn("MCP_WORKSPACE_ROOT", server["env"])
                 self.assertEqual(server["env"]["MCP_WORKSPACE_ROOT"], "${workspaceFolder}")
                 self.assertIn("MCP_CACHE_DIR", server["env"])
-                self.assertEqual(server["env"]["MCP_CACHE_DIR"], "${workspaceFolder}\\.mcp\\.cache")
+                self.assertEqual(server["env"]["MCP_CACHE_DIR"], "${workspaceFolder}/.mcp/.cache")
 
     def test_servers_with_guarded_tools_disable_mutations(self):
         if not CONFIG_PATH.is_file():
